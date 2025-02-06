@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Maps and Charts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        select, button {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AQI Maps and Charts</h1>
+
+    <!-- Buttons to generate files -->
+    <button onclick="generateChart()">Generate Chart</button>
+    <button onclick="generateMap()">Generate Map</button>
+
+    <!-- Dropdown for files -->
+    <h2>Maps</h2>
+    <select id="mapsList" multiple></select>
+
+    <h2>Charts</h2>
+    <select id="chartsList" multiple></select>
+
+    <button onclick="downloadSelectedFiles()">Download Selected</button>
+</div>
+
+<script>
+    async function generateChart() {
+        await fetch('/generate_chart');
+        fetchFiles(); // Refresh the file lists after generation
+    }
+
+    async function generateMap() {
+        await fetch('/generate_map');
+        fetchFiles(); // Refresh the file lists after generation
+    }
+
+    async function fetchFiles() {
+        const response = await fetch('/list_files');
+        const data = await response.json();
+        updateFileLists(data.maps, data.charts);
+    }
+
+    function updateFileLists(maps, charts) {
+        const mapsList = document.getElementById('mapsList');
+        const chartsList = document.getElementById('chartsList');
+        mapsList.innerHTML = '';
+        chartsList.innerHTML = '';
+
+        maps.forEach(file => {
+            const option = document.createElement('option');
+            option.value = file;
+            option.textContent = file;
+            mapsList.appendChild(option);
+        });
+
+        charts.forEach(file => {
+            const option = document.createElement('option');
+            option.value = file;
+            option.textContent = file;
+            chartsList.appendChild(option);
+        });
+    }
+
+    function downloadSelectedFiles() {
+        const selectedMaps = Array.from(document.getElementById('mapsList').selectedOptions).map(option => option.value);
+        const selectedCharts = Array.from(document.getElementById('chartsList').selectedOptions).map(option => option.value);
+
+        selectedMaps.forEach(file => {
+            window.location.href = `/download/maps/${file}`;
+        });
+
+        selectedCharts.forEach(file => {
+            window.location.href = `/download/charts/${file}`;
+        });
+    }
+
+    // Fetch initial files
+    fetchFiles();
+</script>
+
+</body>
+</html>
