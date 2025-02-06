@@ -5,7 +5,7 @@ import pandas as pd
 import folium
 from geopy.geocoders import Nominatim
 from time import sleep
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # Create 'maps' folder if it doesn't exist
 os.makedirs('maps', exist_ok=True)
@@ -119,11 +119,11 @@ if response.status_code == 200:
                     fill_opacity=0.7,
                 ).add_to(sri_lanka_map)
 
-        # Get current date and time for filename
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        # Set Sri Lanka timezone (GMT+5:30)
+        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
 
         # Save the map as an HTML file in the 'maps' folder
-        map_file = f"maps/Sri_Lanka_AQI_Map_{current_time}.html"
+        map_file = f"maps/Sri_Lanka_AQI_Map_{sl_time}.html"
         sri_lanka_map.save(map_file)
 
         print(f"✅ Interactive map saved as {map_file}")
