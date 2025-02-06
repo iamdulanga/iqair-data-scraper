@@ -4,7 +4,75 @@ from bs4 import BeautifulSoup
 # Base URL
 base_url = "https://www.iqair.com"
 
+# Define headers to avoid getting blockedimport requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# Base URL
+base_url = "https://www.iqair.com"
+
 # Define headers to avoid getting blocked
+headers = {
+    "User-Agent": "MyBot/1.0 (https://example.com; contact@example.com)"
+}
+
+# Get the main Sri Lanka page to extract province links
+main_url = f"{base_url}/sri-lanka"
+response = requests.get(main_url, headers=headers)
+
+if response.status_code == 200:
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find province list container
+    province_list = soup.find('ul', class_='state-list')
+
+    if province_list:
+        province_links = {}
+
+        # Extract province names and URLs
+        for item in province_list.find_all('li', class_='state-list__item'):
+            link_tag = item.find('a')
+            if link_tag:
+                province_name = link_tag.text.strip()
+                province_url = base_url + link_tag['href']
+                province_links[province_name] = province_url
+
+        # List to store scraped data
+        data_list = []
+
+        # Now scrape each province for city AQI data
+        for province, url in province_links.items():
+            prov_response = requests.get(url, headers=headers)
+            if prov_response.status_code == 200:
+                prov_soup = BeautifulSoup(prov_response.text, 'html.parser')
+
+                # Find the station list container
+                station_list = prov_soup.find('ul', class_='location-list')
+
+                if station_list:
+                    for station in station_list.find_all('li', class_='location-item'):
+                        city = station.find('span', class_='location-item__name').text.strip()
+                        aqi = station.find('span', class_='location-item__value').text.strip()
+
+                        # Append data as dictionary
+                        data_list.append({
+                            "Province": province,
+                            "City": city,
+                            "AQI": int(aqi)
+                        })
+
+        # Convert to DataFrame
+        df = pd.DataFrame(data_list)
+
+        # Save to Excel
+        df.to_excel("Sri_Lanka_AQI.xlsx", index=False)
+
+        print("✅ Data successfully saved to Sri_Lanka_AQI.xlsx")
+    else:
+        print("No province list found on the page.")
+else:
+    print(f"Failed to retrieve the main page. Status code: {response.status_code}")
+
 headers = {
     "User-Agent": "MyBot/1.0 (https://example.com; contact@example.com)"
 }
