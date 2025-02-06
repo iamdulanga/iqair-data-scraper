@@ -1,0 +1,47 @@
+name: Generate AQI Files
+
+on:
+  schedule:
+    # This will run the action at 12:00 PM UTC every day
+    - cron: '0 12 * * *'  # Runs at 12:00 PM (UTC) every day
+  workflow_dispatch:  # Allows manual triggering via GitHub UI (optional)
+
+jobs:
+  generate-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Specify your Python version
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run the script to generate the files (for charts)
+      - name: Generate chart files
+        run: |
+          python xlsx_file_generator.py  # Update with the correct script path
+
+      # Run the script to generate the files (for maps)
+      - name: Generate map files
+        run: |
+          python map_generator.py  # Update with the correct script path
+
+      # Commit the generated files back to the repository
+      - name: Commit generated files
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "youremail@example.com"
+          git add path/to/maps/* path/to/charts/*
+          git commit -m "Add newly generated charts and maps"
+          git push
