@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from datetime import datetime
 
 # Base URL
 base_url = "https://www.iqair.com"
@@ -68,8 +69,11 @@ if response.status_code == 200:
         df_all_cities = pd.DataFrame(all_cities)
         df_most_polluted = pd.DataFrame(most_polluted_cities)
 
+        # Get current date and time for filename
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
         # Save to Excel with two sheets
-        file_path = "Sri_Lanka_AQI.xlsx"
+        file_path = f"Sri_Lanka_AQI_{current_time}.xlsx"
         with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
             df_all_cities.to_excel(writer, sheet_name="All Cities", index=False)
             df_most_polluted.to_excel(writer, sheet_name="Most Polluted Cities", index=False)

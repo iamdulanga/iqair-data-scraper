@@ -4,6 +4,7 @@ import pandas as pd
 import folium
 from geopy.geocoders import Nominatim
 from time import sleep
+from datetime import datetime
 
 # Base URL
 base_url = "https://www.iqair.com"
@@ -114,8 +115,11 @@ if response.status_code == 200:
                     fill_opacity=0.7,
                 ).add_to(sri_lanka_map)
 
-        # Save the map as an HTML file
-        map_file = "Sri_Lanka_AQI_Map.html"
+        # Get current date and time for filename
+        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        # Save the map as an HTML file with the current date and time in the filename
+        map_file = f"Sri_Lanka_AQI_Map_{current_time}.html"
         sri_lanka_map.save(map_file)
 
         print(f"✅ Interactive map saved as {map_file}")
