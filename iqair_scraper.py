@@ -36,11 +36,18 @@ if response.status_code == 200:
         # Combine cities and AQI values into a list of tuples
         data = list(zip(cities, aqi_values))
         
-        # Print the data
-        print("City\t\tAQI")
-        print("---------------------")
+        # # Print the data
+        # print("City\t\tAQI")
+        # print("---------------------")
+        # for city, aqi in data:
+        #     print(f"{city}\t\t{aqi}")
+
+        # Print the data with proper spacing
+        print(f"{'City':<20}{'AQI'}")
+        print("-" * 30)
         for city, aqi in data:
-            print(f"{city}\t\t{aqi}")
+         print(f"{city:<20}{aqi}")
+
         
         # Find the most polluted city
         most_polluted = max(data, key=lambda x: int(x[1]))
