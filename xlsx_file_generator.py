@@ -1,7 +1,11 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+
+# Create 'charts' folder if it doesn't exist
+os.makedirs('charts', exist_ok=True)
 
 # Base URL
 base_url = "https://www.iqair.com"
@@ -72,8 +76,8 @@ if response.status_code == 200:
         # Get current date and time for filename
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        # Save to Excel with two sheets
-        file_path = f"Sri_Lanka_AQI_{current_time}.xlsx"
+        # Save to Excel with two sheets in 'charts' folder
+        file_path = f"charts/Sri_Lanka_AQI_{current_time}.xlsx"
         with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
             df_all_cities.to_excel(writer, sheet_name="All Cities", index=False)
             df_most_polluted.to_excel(writer, sheet_name="Most Polluted Cities", index=False)
