@@ -3,100 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AQI Maps and Charts</title>
+    <title>AQ Data File Downloader</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 80%;
-            margin: 50px auto;
             padding: 20px;
-            background-color: white;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        select, button {
-            padding: 10px;
-            margin: 5px;
+        h1 {
+            color: #333;
+        }
+        .file-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .file-list li {
+            margin: 10px 0;
+        }
+        .btn {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <h1>AQI Maps and Charts</h1>
-
-    <!-- Buttons to generate files -->
-    <button onclick="generateChart()">Generate Chart</button>
-    <button onclick="generateMap()">Generate Map</button>
-
-    <!-- Dropdown for files -->
+    <h1>Download AQI Files</h1>
     <h2>Maps</h2>
-    <select id="mapsList" multiple></select>
-
+    <ul id="map-files" class="file-list"></ul>
     <h2>Charts</h2>
-    <select id="chartsList" multiple></select>
+    <ul id="chart-files" class="file-list"></ul>
+    <button class="btn" id="download-btn">Download Selected Files</button>
 
-    <button onclick="downloadSelectedFiles()">Download Selected</button>
-</div>
+    <script>
+        const mapFilesList = document.getElementById('map-files');
+        const chartFilesList = document.getElementById('chart-files');
+        const downloadBtn = document.getElementById('download-btn');
 
-<script>
-    async function generateChart() {
-        await fetch('/generate_chart');
-        fetchFiles(); // Refresh the file lists after generation
-    }
+        // GitHub API URL for your repo files
+        const repoOwner = 'DulangaDasanayake'; // Replace with your GitHub username
+        const repoName = 'iqair-data-scraper'; // Replace with your repo name
+        const branchName = 'main'; // Or the branch where the files are stored
 
-    async function generateMap() {
-        await fetch('/generate_map');
-        fetchFiles(); // Refresh the file lists after generation
-    }
+        // Get files from the GitHub repo (Maps & Charts folders)
+        async function fetchFiles(folderPath) {
+            const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
 
-    async function fetchFiles() {
-        const response = await fetch('/list_files');
-        const data = await response.json();
-        updateFileLists(data.maps, data.charts);
-    }
+        // Populate the file list
+        async function populateFileList() {
+            try {
+                const mapFiles = await fetchFiles('maps');
+                const chartFiles = await fetchFiles('charts');
 
-    function updateFileLists(maps, charts) {
-        const mapsList = document.getElementById('mapsList');
-        const chartsList = document.getElementById('chartsList');
-        mapsList.innerHTML = '';
-        chartsList.innerHTML = '';
+                // Populate maps list
+                mapFiles.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <input type="checkbox" value="${file.download_url}" id="map-${file.name}">
+                        <label for="map-${file.name}">${file.name}</label>
+                    `;
+                    mapFilesList.appendChild(listItem);
+                });
 
-        maps.forEach(file => {
-            const option = document.createElement('option');
-            option.value = file;
-            option.textContent = file;
-            mapsList.appendChild(option);
+                // Populate charts list
+                chartFiles.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <input type="checkbox" value="${file.download_url}" id="chart-${file.name}">
+                        <label for="chart-${file.name}">${file.name}</label>
+                    `;
+                    chartFilesList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching files:', error);
+            }
+        }
+
+        // Handle file download when the button is clicked
+        downloadBtn.addEventListener('click', () => {
+            const selectedFiles = [];
+            
+            // Collect selected files (checked checkboxes)
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                selectedFiles.push(checkbox.value);
+            });
+
+            // If no files are selected
+            if (selectedFiles.length === 0) {
+                alert('Please select at least one file to download.');
+                return;
+            }
+
+            // Download selected files
+            selectedFiles.forEach(fileUrl => {
+                const link = document.createElement('a');
+                link.href = fileUrl;
+                link.download = fileUrl.split('/').pop(); // Set file name to be downloaded
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         });
 
-        charts.forEach(file => {
-            const option = document.createElement('option');
-            option.value = file;
-            option.textContent = file;
-            chartsList.appendChild(option);
-        });
-    }
-
-    function downloadSelectedFiles() {
-        const selectedMaps = Array.from(document.getElementById('mapsList').selectedOptions).map(option => option.value);
-        const selectedCharts = Array.from(document.getElementById('chartsList').selectedOptions).map(option => option.value);
-
-        selectedMaps.forEach(file => {
-            window.location.href = `/download/maps/${file}`;
-        });
-
-        selectedCharts.forEach(file => {
-            window.location.href = `/download/charts/${file}`;
-        });
-    }
-
-    // Fetch initial files
-    fetchFiles();
-</script>
-
+        // Initialize file list on page load
+        window.onload = populateFileList;
+    </script>
 </body>
 </html>
