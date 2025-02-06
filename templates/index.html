@@ -61,8 +61,16 @@
         // Populate the file lists
         async function populateFileList() {
             try {
+                // Show the loading indicator
+                const loadingIndicator = document.createElement('div');
+                loadingIndicator.innerText = 'Loading files...';
+                document.body.appendChild(loadingIndicator);
+
                 const mapFiles = await fetchFiles('maps');
                 const chartFiles = await fetchFiles('charts');
+
+                // Remove loading indicator once files are fetched
+                document.body.removeChild(loadingIndicator);
 
                 // Populate maps list
                 mapFiles.forEach(file => {
