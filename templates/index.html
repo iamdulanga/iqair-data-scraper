@@ -33,7 +33,7 @@
     </style>
 </head>
 <body>
-    <h1>Download AQI Files</h1>
+    <h1>Download AQI Data & Map Files</h1>
     <h2>Maps</h2>
     <ul id="map-files" class="file-list"></ul>
     <h2>Charts</h2>
@@ -68,7 +68,7 @@
                 mapFiles.forEach(file => {
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <input type="checkbox" value="${file.download_url}" id="map-${file.name}">
+                        <input type="checkbox" value="https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/maps/${file.name}" id="map-${file.name}">
                         <label for="map-${file.name}">${file.name}</label>
                     `;
                     mapFilesList.appendChild(listItem);
@@ -78,7 +78,7 @@
                 chartFiles.forEach(file => {
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <input type="checkbox" value="${file.download_url}" id="chart-${file.name}">
+                        <input type="checkbox" value="https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/charts/${file.name}" id="chart-${file.name}">
                         <label for="chart-${file.name}">${file.name}</label>
                     `;
                     chartFilesList.appendChild(listItem);
