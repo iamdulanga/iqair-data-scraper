@@ -2,7 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 # Create 'charts' folder if it doesn't exist
 os.makedirs('charts', exist_ok=True)
@@ -53,11 +53,14 @@ if response.status_code == 200:
                     province_data = []  # Store all cities in this province
 
                     for station in station_list.find_all('li', class_='location-item'):
-                        city = station.find('span', class_='location-item__name').text.strip()
-                        aqi = station.find('span', class_='location-item__value').text.strip()
+                        city = station.find(
+                            'span', class_='location-item__name').text.strip()
+                        aqi = station.find(
+                            'span', class_='location-item__value').text.strip()
 
                         # Append to overall data
-                        all_cities.append({"Province": province, "City": city, "AQI": int(aqi)})
+                        all_cities.append(
+                            {"Province": province, "City": city, "AQI": int(aqi)})
                         province_data.append((city, int(aqi)))
 
                     # Get the most polluted city in this province
@@ -73,14 +76,16 @@ if response.status_code == 200:
         df_all_cities = pd.DataFrame(all_cities)
         df_most_polluted = pd.DataFrame(most_polluted_cities)
 
-        # Get current date and time for filename
-        current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        # Set Sri Lanka timezone (GMT+5:30)
+        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
 
-        # Save to Excel with two sheets in 'charts' folder
-        file_path = f"charts/Sri_Lanka_AQI_{current_time}.xlsx"
+        # Save to Excel with the corrected timestamp
+        file_path = f"charts/Sri_Lanka_AQI_{sl_time}.xlsx"
         with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
-            df_all_cities.to_excel(writer, sheet_name="All Cities", index=False)
-            df_most_polluted.to_excel(writer, sheet_name="Most Polluted Cities", index=False)
+            df_all_cities.to_excel(
+                writer, sheet_name="All Cities", index=False)
+            df_most_polluted.to_excel(
+                writer, sheet_name="Most Polluted Cities", index=False)
 
         print(f"✅ Data successfully saved to {file_path}")
     else:
