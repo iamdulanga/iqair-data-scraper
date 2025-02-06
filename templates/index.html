@@ -45,12 +45,12 @@
         const chartFilesList = document.getElementById('chart-files');
         const downloadBtn = document.getElementById('download-btn');
 
-        // GitHub API URL for your repo files
-        const repoOwner = 'DulangaDasanayake'; // Replace with your GitHub username
-        const repoName = 'iqair-data-scraper'; // Replace with your repo name
-        const branchName = 'main'; // Or the branch where the files are stored
+        // GitHub Repo Details
+        const repoOwner = 'DulangaDasanayake'; // Your GitHub username
+        const repoName = 'iqair-data-scraper'; // Your repo name
+        const branchName = 'main'; // Branch where files are stored
 
-        // Get files from the GitHub repo (Maps & Charts folders)
+        // Function to fetch files from GitHub repo
         async function fetchFiles(folderPath) {
             const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
             const response = await fetch(url);
@@ -58,7 +58,7 @@
             return data;
         }
 
-        // Populate the file list
+        // Populate the file lists
         async function populateFileList() {
             try {
                 const mapFiles = await fetchFiles('maps');
@@ -66,9 +66,10 @@
 
                 // Populate maps list
                 mapFiles.forEach(file => {
+                    const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/maps/${file.name}`;
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <input type="checkbox" value="https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/maps/${file.name}" id="map-${file.name}">
+                        <input type="checkbox" value="${fileUrl}" id="map-${file.name}">
                         <label for="map-${file.name}">${file.name}</label>
                     `;
                     mapFilesList.appendChild(listItem);
@@ -76,9 +77,10 @@
 
                 // Populate charts list
                 chartFiles.forEach(file => {
+                    const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/charts/${file.name}`;
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <input type="checkbox" value="https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/charts/${file.name}" id="chart-${file.name}">
+                        <input type="checkbox" value="${fileUrl}" id="chart-${file.name}">
                         <label for="chart-${file.name}">${file.name}</label>
                     `;
                     chartFilesList.appendChild(listItem);
@@ -88,30 +90,35 @@
             }
         }
 
+        // Function to force download files
+        async function forceDownload(fileUrl, fileName) {
+            try {
+                const response = await fetch(fileUrl);
+                const blob = await response.blob();  // Convert response to blob
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName; // Set proper filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+            } catch (error) {
+                console.error('Download failed:', error);
+            }
+        }
+
         // Handle file download when the button is clicked
         downloadBtn.addEventListener('click', () => {
-            const selectedFiles = [];
-            
-            // Collect selected files (checked checkboxes)
             const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-            checkboxes.forEach(checkbox => {
-                selectedFiles.push(checkbox.value);
-            });
-
-            // If no files are selected
-            if (selectedFiles.length === 0) {
+            if (checkboxes.length === 0) {
                 alert('Please select at least one file to download.');
                 return;
             }
 
-            // Download selected files
-            selectedFiles.forEach(fileUrl => {
-                const link = document.createElement('a');
-                link.href = fileUrl;
-                link.download = fileUrl.split('/').pop(); // Set file name to be downloaded
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+            checkboxes.forEach(checkbox => {
+                const fileUrl = checkbox.value;
+                const fileName = fileUrl.split('/').pop();
+                forceDownload(fileUrl, fileName);
             });
         });
 
