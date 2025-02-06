@@ -1,3 +1,4 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -5,6 +6,9 @@ import folium
 from geopy.geocoders import Nominatim
 from time import sleep
 from datetime import datetime
+
+# Create 'maps' folder if it doesn't exist
+os.makedirs('maps', exist_ok=True)
 
 # Base URL
 base_url = "https://www.iqair.com"
@@ -118,8 +122,8 @@ if response.status_code == 200:
         # Get current date and time for filename
         current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-        # Save the map as an HTML file with the current date and time in the filename
-        map_file = f"Sri_Lanka_AQI_Map_{current_time}.html"
+        # Save the map as an HTML file in the 'maps' folder
+        map_file = f"maps/Sri_Lanka_AQI_Map_{current_time}.html"
         sri_lanka_map.save(map_file)
 
         print(f"✅ Interactive map saved as {map_file}")
