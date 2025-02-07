@@ -12,12 +12,20 @@
         h1 {
             color: #333;
         }
-        .file-list {
-            list-style-type: none;
-            padding: 0;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        .file-list li {
-            margin: 10px 0;
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
         }
         .btn {
             padding: 10px 15px;
@@ -30,20 +38,72 @@
         .btn:hover {
             background-color: #45a049;
         }
+
+        /* Loading spinner styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3; /* Light gray */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        /* Animation for spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <h1>Download AQI Data & Map Files</h1>
-    <h2>Maps</h2>
-    <ul id="map-files" class="file-list"></ul>
-    <h2>Charts</h2>
-    <ul id="chart-files" class="file-list"></ul>
+    
+    <!-- File Table -->
+    <table id="file-table">
+        <thead>
+            <tr>
+                <th>Province Maps</th>
+                <th>All Station Maps</th>
+                <th>XL Files</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="province-map-files"></td>
+                <td id="map-files"></td>
+                <td id="xlsx-files"></td>
+            </tr>
+        </tbody>
+    </table>
+    
     <button class="btn" id="download-btn">Download Selected Files</button>
 
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
     <script>
+        const xlsxFilesList = document.getElementById('xlsx-files');
         const mapFilesList = document.getElementById('map-files');
-        const chartFilesList = document.getElementById('chart-files');
+        const provinceMapFilesList = document.getElementById('province-map-files');
         const downloadBtn = document.getElementById('download-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
 
         // GitHub Repo Details
         const repoOwner = 'DulangaDasanayake'; // Your GitHub username
@@ -53,28 +113,61 @@
         // Function to fetch files from GitHub repo
         async function fetchFiles(folderPath) {
             const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            return data;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.message === "Not Found") {
+                    throw new Error('Folder not found');
+                }
+                return data;
+            } catch (error) {
+                console.error('Error fetching files:', error);
+                alert('There was an issue fetching the files. Please check the console for details.');
+                hideLoading();
+                return [];
+            }
+        }
+
+        // Show loading overlay
+        function showLoading() {
+            loadingOverlay.style.visibility = 'visible';
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            loadingOverlay.style.visibility = 'hidden';
         }
 
         // Populate the file lists
         async function populateFileList() {
             try {
                 // Show the loading indicator
-                const loadingIndicator = document.createElement('div');
-                loadingIndicator.innerText = 'Loading files...';
-                document.body.appendChild(loadingIndicator);
+                showLoading();
 
+                const xlsxFiles = await fetchFiles('xlsx_generator');  // Assuming your xlsx generator is in 'xlsx_generator'
                 const mapFiles = await fetchFiles('maps');
-                const chartFiles = await fetchFiles('charts');
+                const provinceMapFiles = await fetchFiles('province_maps');
 
-                // Remove loading indicator once files are fetched
-                document.body.removeChild(loadingIndicator);
+                // Hide loading indicator once files are fetched
+                hideLoading();
 
-                // Populate maps list
+                console.log('Fetched files:', { xlsxFiles, mapFiles, provinceMapFiles });
+
+                // Populate province maps
+                provinceMapFiles.forEach(file => {
+                    const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/province_maps/${file.name}`;
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <input type="checkbox" value="${fileUrl}" id="province-map-${file.name}">
+                        <label for="province-map-${file.name}">${file.name}</label>
+                    `;
+                    provinceMapFilesList.appendChild(listItem);
+                });
+
+                // Populate all station maps
                 mapFiles.forEach(file => {
-                    const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/maps/${file.name}`;
+                    const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/all_stations_maps/${file.name}`;
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
                         <input type="checkbox" value="${fileUrl}" id="map-${file.name}">
@@ -83,18 +176,19 @@
                     mapFilesList.appendChild(listItem);
                 });
 
-                // Populate charts list
-                chartFiles.forEach(file => {
+                // Populate xlsx files
+                xlsxFiles.forEach(file => {
                     const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/charts/${file.name}`;
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
-                        <input type="checkbox" value="${fileUrl}" id="chart-${file.name}">
-                        <label for="chart-${file.name}">${file.name}</label>
+                        <input type="checkbox" value="${fileUrl}" id="xlsx-${file.name}">
+                        <label for="xlsx-${file.name}">${file.name}</label>
                     `;
-                    chartFilesList.appendChild(listItem);
+                    xlsxFilesList.appendChild(listItem);
                 });
             } catch (error) {
-                console.error('Error fetching files:', error);
+                console.error('Error populating file list:', error);
+                hideLoading();  // Ensure the loading overlay is hidden on error
             }
         }
 
