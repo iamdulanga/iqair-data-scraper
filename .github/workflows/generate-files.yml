@@ -3,8 +3,8 @@ name: Generate AQI Files
 on:
   schedule:
     # This will run the action every 15 minutes
-    - cron: '*/5 * * * *'  # Runs every 15 minutes
-  workflow_dispatch:  # Allows manual triggering via GitHub UI (optional)
+    - cron: "*/5 * * * *" # Runs every 15 minutes
+  workflow_dispatch: # Allows manual triggering via GitHub UI (optional)
 
 jobs:
   generate-files:
@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'  # Specify your Python version
+          python-version: "3.12" # Specify your Python version
 
       # Install dependencies
       - name: Install dependencies
@@ -31,7 +31,7 @@ jobs:
       # This will execute the Flask app and generate the necessary files
       - name: Run app.py to generate files
         run: |
-          python app.py  
+          python app.py
 
       # Commit the generated files back to the repository
       - name: Commit generated files
