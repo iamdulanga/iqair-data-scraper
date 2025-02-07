@@ -97,6 +97,7 @@ The files in your repository's `maps` and `charts` folders are fetched via the G
 ### GitHub API Permissions
 
 The app fetches files from the GitHub repository using the GitHub API. To ensure the app has access to the repository, make sure:
+
 - The repository is **public** (or private with appropriate API access tokens configured).
   
 ## License
@@ -105,9 +106,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-### Notes for Developers:
+### Notes for Developers
 
-- **Future Enhancements**: 
+- **Future Enhancements**:
   - Consider adding features like file preview (for charts), real-time updates, or filtering files by date or name.
   - You could also extend the GitHub Action to send email notifications once new files are generated.
   
@@ -115,3 +116,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - If the repository is private, use GitHub API tokens with restricted access instead of public access.
 
 ---
+
+## How the Map Works
+
+- 📍 Cities with highest AQI in each province are marked on Sri Lanka.
+- 🎨 Color-coded AQI levels:
+
+- 🟢 Green (0-50) → Good
+- 🟡 Yellow (51-100) → Moderate
+- 🟠 Orange (101-150) → Unhealthy for Sensitive Groups
+- 🔴 Red (151-200) → Unhealthy
+- 🟣 Purple (201-300) → Very Unhealthy
+- 🟤 Maroon (301+) → Hazardous
