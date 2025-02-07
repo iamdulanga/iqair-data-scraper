@@ -7,9 +7,6 @@ from geopy.geocoders import Nominatim
 from time import sleep
 from datetime import datetime, timezone, timedelta
 
-# Create 'maps' folder if it doesn't exist
-# os.makedirs('maps', exist_ok=True)
-
 # Base URL
 base_url = "https://www.iqair.com"
 
@@ -47,8 +44,8 @@ if response.status_code == 200:
                 if station_list:
                     for station in station_list.find_all('li', class_='location-item'):
                         city = station.find('span', class_='location-item__name').text.strip()
-                        aqi = station.find('span', class_='location-item__value').text.strip()
-                        all_station_data.append({"Province": province, "City": city, "AQI": int(aqi)})
+                        aqi = int(station.find('span', class_='location-item__value').text.strip())
+                        all_station_data.append({"Province": province, "City": city, "AQI": aqi})
 
         df_all_stations = pd.DataFrame(all_station_data)
 
@@ -85,23 +82,60 @@ if response.status_code == 200:
             else:
                 return "maroon"
 
-        # Add markers to the map
+        # Function to get AQI face icon
+        def get_aqi_icon(aqi):
+            if aqi <= 50:
+                return "😊"
+            elif aqi <= 100:
+                return "😐"
+            elif aqi <= 150:
+                return "😷"
+            elif aqi <= 200:
+                return "🤢"
+            elif aqi <= 300:
+                return "😡"
+            else:
+                return "☠️"
+
+        # Add markers with styled tooltips
         for _, row in df_all_stations.iterrows():
             if pd.notna(row["Latitude"]) and pd.notna(row["Longitude"]):
-                folium.CircleMarker(
+                color = get_aqi_color(row["AQI"])
+                icon = get_aqi_icon(row["AQI"])
+                
+                marker = folium.CircleMarker(
                     location=[row["Latitude"], row["Longitude"]],
-                    radius=8,
-                    popup=f"{row['City']} (AQI: {row['AQI']})",
-                    color=get_aqi_color(row["AQI"]),
+                    radius=10,
+                    color=color,
                     fill=True,
-                    fill_color=get_aqi_color(row["AQI"]),
-                    fill_opacity=0.7,
+                    fill_color=color,
+                    fill_opacity=0.8,
+                )
+                
+                popup_html = f'''
+                <div style="background-color:{color}; padding:10px; border-radius:8px; color:black; text-align:center; width:150px;">
+                    <div style="font-size:24px;">{icon}</div>
+                    <div style="font-size:16px;"><b>{row['City']}</b></div>
+                    <div style="font-size:20px; font-weight:bold;">AQI: {row['AQI']}</div>
+                </div>
+                '''
+                
+                folium.Marker(
+                    location=[row["Latitude"], row["Longitude"]],
+                    icon=folium.DivIcon(html=f'''<div style="background-color:{color};
+                                                  width:30px; height:30px; 
+                                                  border-radius:50%;
+                                                  text-align:center;
+                                                  font-weight:bold;
+                                                  color:black;
+                                                  line-height:30px;">{row['AQI']}</div>'''),
+                    popup=folium.Popup(popup_html, max_width=200, show=False)
                 ).add_to(sri_lanka_map)
 
         # Set Sri Lanka timezone (GMT+5:30)
         sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
 
-        # Save the map as an HTML file in the 'maps' folder
+        # Save the map as an HTML file
         map_file = f"all_stations_maps/Sri_Lanka_AQI_Map_{sl_time}.html"
         sri_lanka_map.save(map_file)
 

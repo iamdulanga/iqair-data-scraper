@@ -7,9 +7,6 @@ from geopy.geocoders import Nominatim
 from time import sleep
 from datetime import datetime, timezone, timedelta
 
-# Create 'maps' folder if it doesn't exist
-os.makedirs('maps', exist_ok=True)
-
 # Base URL
 base_url = "https://www.iqair.com"
 
