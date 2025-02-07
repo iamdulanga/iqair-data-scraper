@@ -13,13 +13,13 @@ jobs:
     steps:
       # Checkout the repository code
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Set up Python environment
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.8'  # Specify your Python version
+          python-version: '3.12'  # Specify your Python version
 
       # Install dependencies
       - name: Install dependencies
@@ -39,5 +39,9 @@ jobs:
           git config --global user.name "DulangaDasanayake"
           git config --global user.email "dulanganiroshan721@gmail.com"
           git add charts/* all_stations_maps/* province_maps/*
-          git diff --cached --quiet || git commit -m "Generated chart and maps"
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
+          if ! git diff --cached --quiet; then
+           git commit -m "Generated chart and maps"
+           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
+          else
+           echo "No changes to commit"
+          fi
