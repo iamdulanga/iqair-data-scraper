@@ -25,7 +25,7 @@ if response.status_code == 200:
 
     if province_list:
         province_links = {}
-        
+
         for item in province_list.find_all('li', class_='state-list__item'):
             link_tag = item.find('a')
             if link_tag:
@@ -43,14 +43,18 @@ if response.status_code == 200:
 
                 if station_list:
                     for station in station_list.find_all('li', class_='location-item'):
-                        city = station.find('span', class_='location-item__name').text.strip()
-                        aqi = int(station.find('span', class_='location-item__value').text.strip())
-                        all_station_data.append({"Province": province, "City": city, "AQI": aqi})
+                        city = station.find(
+                            'span', class_='location-item__name').text.strip()
+                        aqi = int(station.find(
+                            'span', class_='location-item__value').text.strip())
+                        all_station_data.append(
+                            {"Province": province, "City": city, "AQI": aqi})
 
         df_all_stations = pd.DataFrame(all_station_data)
 
         # Geocode cities to get latitude & longitude
         geolocator = Nominatim(user_agent="sri_lanka_aqi_map")
+
         def get_coordinates(city):
             try:
                 location = geolocator.geocode(city + ", Sri Lanka")
@@ -102,7 +106,7 @@ if response.status_code == 200:
             if pd.notna(row["Latitude"]) and pd.notna(row["Longitude"]):
                 color = get_aqi_color(row["AQI"])
                 icon = get_aqi_icon(row["AQI"])
-                
+
                 marker = folium.CircleMarker(
                     location=[row["Latitude"], row["Longitude"]],
                     radius=10,
@@ -111,7 +115,7 @@ if response.status_code == 200:
                     fill_color=color,
                     fill_opacity=0.8,
                 )
-                
+
                 popup_html = f'''
                 <div style="background-color:{color}; padding:10px; border-radius:8px; color:black; text-align:center; width:150px;">
                     <div style="font-size:24px;">{icon}</div>
@@ -119,7 +123,7 @@ if response.status_code == 200:
                     <div style="font-size:20px; font-weight:bold;">AQI: {row['AQI']}</div>
                 </div>
                 '''
-                
+
                 folium.Marker(
                     location=[row["Latitude"], row["Longitude"]],
                     icon=folium.DivIcon(html=f'''<div style="background-color:{color};
@@ -133,7 +137,8 @@ if response.status_code == 200:
                 ).add_to(sri_lanka_map)
 
         # Set Sri Lanka timezone (GMT+5:30)
-        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
+        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
+            "%Y-%m-%d_%H-%M-%S")
 
         # Save the map as an HTML file
         map_file = f"all_stations_maps/Sri_Lanka_AQI_Map_{sl_time}.html"
@@ -143,4 +148,5 @@ if response.status_code == 200:
     else:
         print("No province list found on the page.")
 else:
-    print(f"Failed to retrieve the main page. Status code: {response.status_code}")
+    print(
+        f"Failed to retrieve the main page. Status code: {response.status_code}")

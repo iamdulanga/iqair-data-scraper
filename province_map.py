@@ -52,8 +52,10 @@ if response.status_code == 200:
                     province_data = []  # Store all cities in this province
 
                     for station in station_list.find_all('li', class_='location-item'):
-                        city = station.find('span', class_='location-item__name').text.strip()
-                        aqi = station.find('span', class_='location-item__value').text.strip()
+                        city = station.find(
+                            'span', class_='location-item__name').text.strip()
+                        aqi = station.find(
+                            'span', class_='location-item__value').text.strip()
 
                         # Store all cities in this province
                         province_data.append((city, int(aqi)))
@@ -72,6 +74,7 @@ if response.status_code == 200:
 
         # Geocode cities to get latitude & longitude
         geolocator = Nominatim(user_agent="sri_lanka_aqi_map")
+
         def get_coordinates(city):
             try:
                 location = geolocator.geocode(city + ", Sri Lanka")
@@ -117,7 +120,8 @@ if response.status_code == 200:
                 ).add_to(sri_lanka_map)
 
         # Set Sri Lanka timezone (GMT+5:30)
-        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
+        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
+            "%Y-%m-%d_%H-%M-%S")
 
         # Save the map as an HTML file in the 'maps' folder
         map_file = f"province_maps/Sri_Lanka_AQI_Map_{sl_time}.html"
@@ -128,4 +132,5 @@ if response.status_code == 200:
     else:
         print("No province list found on the page.")
 else:
-    print(f"Failed to retrieve the main page. Status code: {response.status_code}")
+    print(
+        f"Failed to retrieve the main page. Status code: {response.status_code}")

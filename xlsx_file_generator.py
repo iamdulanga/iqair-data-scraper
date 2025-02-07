@@ -74,7 +74,8 @@ if response.status_code == 200:
         df_most_polluted = pd.DataFrame(most_polluted_cities)
 
         # Set Sri Lanka timezone (GMT+5:30)
-        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
+        sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
+            "%Y-%m-%d_%H-%M-%S")
 
         # Save to Excel with the corrected timestamp
         file_path = f"charts/Sri_Lanka_AQI_{sl_time}.xlsx"
@@ -88,4 +89,5 @@ if response.status_code == 200:
     else:
         print("No province list found on the page.")
 else:
-    print(f"Failed to retrieve the main page. Status code: {response.status_code}")
+    print(
+        f"Failed to retrieve the main page. Status code: {response.status_code}")

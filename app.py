@@ -13,9 +13,11 @@ os.makedirs(ALL_STATIONS_MAPS_FOLDER, exist_ok=True)
 os.makedirs(PROVINCE_MAPS_FOLDER, exist_ok=True)
 os.makedirs(CHARTS_FOLDER, exist_ok=True)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/list_files')
 def list_files():
@@ -29,6 +31,7 @@ def list_files():
         "charts": charts_files
     }
 
+
 @app.route('/download/<folder>/<filename>')
 def download_file(folder, filename):
     # Determine the correct folder path based on input
@@ -38,11 +41,12 @@ def download_file(folder, filename):
         'charts': CHARTS_FOLDER
     }
     folder_path = folder_paths.get(folder)
-    
+
     if folder_path:
         file_path = os.path.join(folder_path, filename)
         return send_file(file_path, as_attachment=True)
     return "Folder not found", 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
