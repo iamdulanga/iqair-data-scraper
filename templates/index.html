@@ -30,6 +30,23 @@
       th {
         background-color: #f4f4f4;
       }
+
+      /* Container for the columns to allow for individual scrolling */
+      .file-column {
+        max-height: 300px; /* Adjust height as necessary */
+        overflow-y: auto;
+      }
+
+      .file-column ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .file-column li {
+        margin-bottom: 5px;
+      }
+
       .btn {
         padding: 10px 15px;
         background-color: #4caf50;
@@ -91,9 +108,9 @@
       </thead>
       <tbody>
         <tr>
-          <td id="province-map-files"></td>
-          <td id="all-stations-map-files"></td>
-          <td id="xlsx-files"></td>
+          <td class="file-column" id="province-map-files"></td>
+          <td class="file-column" id="all-stations-map-files"></td>
+          <td class="file-column" id="xlsx-files"></td>
         </tr>
       </tbody>
     </table>
@@ -151,10 +168,9 @@
         try {
           showLoading();
 
-          // Corrected folder names here
-          const xlsxFiles = await fetchFiles("charts"); // Changed from 'xlsx_generator' to 'charts'
-          const allStationsMapFiles = await fetchFiles("all_stations_maps"); // This is correct
-          const provinceMapFiles = await fetchFiles("province_maps"); // This is correct
+          const xlsxFiles = await fetchFiles("charts");
+          const allStationsMapFiles = await fetchFiles("all_stations_maps");
+          const provinceMapFiles = await fetchFiles("province_maps");
 
           hideLoading();
 
@@ -179,7 +195,7 @@
             const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/charts/${file.name}`;
             const listItem = document.createElement("li");
             listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="xlsx-${file.name}">
-                            <label for="xlsx-${file.name}">${file.name}</label>`;
+                                  <label for="xlsx-${file.name}">${file.name}</label>`;
             xlsxFilesList.appendChild(listItem);
           });
 
@@ -187,7 +203,7 @@
             const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/all_stations_maps/${file.name}`;
             const listItem = document.createElement("li");
             listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="all-stations-map-${file.name}">
-                            <label for="all-stations-map-${file.name}">${file.name}</label>`;
+                                  <label for="all-stations-map-${file.name}">${file.name}</label>`;
             allStationsMapFilesList.appendChild(listItem);
           });
 
@@ -195,7 +211,7 @@
             const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/province_maps/${file.name}`;
             const listItem = document.createElement("li");
             listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="province-map-${file.name}">
-                            <label for="province-map-${file.name}">${file.name}</label>`;
+                                  <label for="province-map-${file.name}">${file.name}</label>`;
             provinceMapFilesList.appendChild(listItem);
           });
         } catch (error) {
