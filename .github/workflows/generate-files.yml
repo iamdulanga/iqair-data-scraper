@@ -32,10 +32,15 @@ jobs:
         run: |
           python xlsx_file_generator.py  # Update with the correct script path
 
-      # Run the script to generate the files (for maps)
+      # Run the script to generate the files (for province maps)
       - name: Generate map files
         run: |
-          python map_generator.py  # Update with the correct script path
+          python province_map.py  # Update with the correct script path
+
+      # Run the script to generate the files (for all station maps)
+      - name: Generate map files
+        run: |
+          python all_stations_map.py  # Update with the correct script path
 
       # Commit the generated files back to the repository
       - name: Commit generated files
