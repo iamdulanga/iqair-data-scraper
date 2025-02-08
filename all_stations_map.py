@@ -141,7 +141,7 @@ if response.status_code == 200:
             "%Y-%m-%d_%H-%M-%S")
 
         # Save the map as an HTML file
-        map_file = f"all_stations_maps/Sri_Lanka_AQI_Map_{sl_time}.html"
+        map_file = f"all_stations_maps/SL_All_Stations_AQI_Map_{sl_time}.html"
         sri_lanka_map.save(map_file)
 
         print(f"✅ Interactive map saved as {map_file}")

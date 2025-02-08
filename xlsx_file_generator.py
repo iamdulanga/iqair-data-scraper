@@ -78,7 +78,7 @@ if response.status_code == 200:
             "%Y-%m-%d_%H-%M-%S")
 
         # Save to Excel with the corrected timestamp
-        file_path = f"charts/Sri_Lanka_AQI_{sl_time}.xlsx"
+        file_path = f"charts/SL_AQI_{sl_time}.xlsx"
         with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
             df_all_cities.to_excel(
                 writer, sheet_name="All Cities", index=False)
