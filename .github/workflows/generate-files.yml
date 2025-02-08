@@ -2,7 +2,7 @@ name: Generate AQI Files
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Runs every 5 minutes
+    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *'  # Every 5 minutes, including start of the hour
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -30,7 +30,12 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
 
-      # Generate chart files
+      # Generate daily AQI data file
+      - name: Generate AQI data files
+        run: |
+          python daily_aqi_data.py
+
+      # Generate all station and most polluted cities files
       - name: Generate chart files
         run: |
           python xlsx_file_generator.py
@@ -50,6 +55,6 @@ jobs:
         run: |
           git config --global user.name "DulangaDasanayake"
           git config --global user.email "dulanganiroshan721@gmail.com"
-          git add charts/* province_maps/* all_stations_maps/*
+          git add charts/* daily_aqi_data/* province_maps/* all_stations_maps/*
           git diff --cached --quiet || git commit -m "Add newly generated charts and maps"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
