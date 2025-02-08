@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 from bs4 import BeautifulSoup
-from geopy.geocoders import Nominatim
 
 # Base URL
 BASE_URL = "https://www.iqair.com"
@@ -64,31 +63,66 @@ def fetch_aqi_data():
     times = generate_time_intervals()  # Generate time intervals every 5 minutes
     all_station_data = get_all_stations()
 
-    all_cities = []
-    for station in all_station_data:
-        city_data = {"City/Time": station["City"]}
-
-        # Replicate AQI value for all 5-minute intervals
-        for time in times:
-            city_data[time] = station["AQI"]
-
-        all_cities.append(city_data)
-
-    # Convert to DataFrame and save to Excel
-    df = pd.DataFrame(all_cities)
+    # Start fresh at the beginning of each day
     date_str = datetime.now(sl_timezone).strftime("%Y-%m-%d")  # Use Sri Lanka timezone
     file_path = f"daily_aqi_data/SL_Daily_AQI_{date_str}.xlsx"
 
-    # Check if the file already exists and append new data if needed
-    if os.path.exists(file_path):
-        existing_data = pd.read_excel(file_path, sheet_name="All Cities")
-        df = pd.concat([existing_data, df], ignore_index=True)
+    # If file does not exist, create it
+    if not os.path.exists(file_path):
+        # Prepare the first row (times) and the first column (cities)
+        time_row = ["City/Time"] + times  # First row with time slots
+        city_column = [station["City"] for station in all_station_data]
 
-    # Save the data to the Excel file
-    with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
-        df.to_excel(writer, sheet_name="All Cities", index=False)
+        # Create a DataFrame with the first column as 'City/Time'
+        data = {"City/Time": city_column}
+        
+        # Fill the first column (00:00) with AQI data
+        data["00:00"] = [station["AQI"] for station in all_station_data]  # Fill 00:00 with AQI data
 
-    print(f"✅ Data successfully saved to {file_path}")
+        # Add additional time columns with None or empty values initially
+        for i, time in enumerate(times[1:]):  # Start from the second time slot (00:05 onwards)
+            data[time] = [None] * len(city_column)
+
+        # Convert to DataFrame and save as the first day's data
+        df = pd.DataFrame(data)
+
+        # Save the data to the Excel file
+        with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
+            df.to_excel(writer, sheet_name="All Cities", index=False, header=time_row)
+
+        print(f"✅ Fresh data file created for {date_str}")
+    
+    else:
+        # If file already exists, add a new column with AQI data for the next 5-minute interval
+        existing_data = pd.read_excel(file_path, sheet_name="All Cities", header=0)
+
+        # Get the latest time column (e.g., '00:05', '00:10', etc.)
+        latest_time_column = [col for col in existing_data.columns if col != "City/Time"]
+        latest_time_column = max(latest_time_column, default="00:00")
+
+        # Check if 00:00 already exists and avoid filling it again
+        if latest_time_column != "00:00":
+            # Get the next time slot (e.g., '00:05')
+            next_time = (datetime.strptime(latest_time_column, "%H:%M") + timedelta(minutes=5)).strftime("%H:%M")
+        else:
+            # If it's the first run of the day, skip updating 00:00
+            next_time = "00:05"
+
+        # Add a new column with AQI data for the next time slot
+        existing_data[next_time] = None  # Add the new time column with None values initially
+
+        # Fill the AQI data for this new time slot
+        for i, row in existing_data.iterrows():
+            for station in all_station_data:
+                if row["City/Time"] == station["City"]:
+                    existing_data.at[i, next_time] = station["AQI"]
+                    break
+
+        # Save the updated data to the Excel file
+        with pd.ExcelWriter(file_path, engine="openpyxl") as writer:
+            existing_data.to_excel(writer, sheet_name="All Cities", index=False)
+
+        print(f"✅ AQI data for {next_time} added to {file_path}")
 
 # Run the data fetch function
 fetch_aqi_data()
