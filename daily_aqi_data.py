@@ -63,6 +63,9 @@ def fetch_aqi_data():
     times = generate_time_intervals()  # Generate time intervals every 5 minutes
     all_station_data = get_all_stations()
 
+    # Ensure the directory exists before saving the file
+    os.makedirs("daily_aqi_data", exist_ok=True)
+
     # Start fresh at the beginning of each day
     date_str = datetime.now(sl_timezone).strftime("%Y-%m-%d")  # Use Sri Lanka timezone
     file_path = f"daily_aqi_data/SL_Daily_AQI_{date_str}.xlsx"
