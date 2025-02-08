@@ -46,6 +46,7 @@
         padding: 10px;
         text-align: left;
         vertical-align: top;
+        width: 25%; /* Equal width for each column (1/4) */
       }
       th {
         background-color: #f4f4f4;
@@ -132,6 +133,7 @@
           <th>Province Maps</th>
           <th>All Station Maps</th>
           <th>All Stations & Most Polluted Cities XL Files</th>
+          <th>Daily AQI Data Files</th> <!-- New column for Daily AQI Data -->
         </tr>
       </thead>
       <tbody>
@@ -151,6 +153,11 @@
               <ul id="xlsx-files"></ul>
             </div>
           </td>
+          <td>
+            <div class="file-container">
+              <ul id="daily-aqi-data-files"></ul> <!-- New file container for daily AQI data -->
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -161,11 +168,9 @@
 
     <script>
       const xlsxFilesList = document.getElementById("xlsx-files");
-      const allStationsMapFilesList = document.getElementById(
-        "all-stations-map-files"
-      );
-      const provinceMapFilesList =
-        document.getElementById("province-map-files");
+      const allStationsMapFilesList = document.getElementById("all-stations-map-files");
+      const provinceMapFilesList = document.getElementById("province-map-files");
+      const dailyAqiDataFilesList = document.getElementById("daily-aqi-data-files"); // New element for daily AQI data
       const downloadBtn = document.getElementById("download-btn");
       const loadingOverlay = document.getElementById("loading-overlay");
 
@@ -177,8 +182,7 @@
         const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
         try {
           const response = await fetch(url);
-          if (!response.ok)
-            throw new Error(`HTTP error! status: ${response.status}`);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
           return await response.json();
         } catch (error) {
           console.error("Error fetching files:", error);
@@ -200,11 +204,12 @@
         try {
           showLoading();
 
-          const [xlsxFiles, allStationsMapFiles, provinceMapFiles] =
+          const [xlsxFiles, allStationsMapFiles, provinceMapFiles, dailyAqiDataFiles] = 
             await Promise.all([
               fetchFiles("charts"),
               fetchFiles("all_stations_maps"),
               fetchFiles("province_maps"),
+              fetchFiles("daily_aqi_data"), // Fetch files from the daily_aqi_data folder
             ]);
 
           hideLoading();
@@ -212,7 +217,8 @@
           if (
             !xlsxFiles.length &&
             !allStationsMapFiles.length &&
-            !provinceMapFiles.length
+            !provinceMapFiles.length &&
+            !dailyAqiDataFiles.length // Check if daily AQI files exist
           ) {
             alert("No files found in the repository.");
             return;
@@ -229,16 +235,10 @@
           }
 
           addFilesToList(xlsxFiles, xlsxFilesList, "charts");
-          addFilesToList(
-            allStationsMapFiles,
-            allStationsMapFilesList,
-            "all_stations_maps"
-          );
-          addFilesToList(
-            provinceMapFiles,
-            provinceMapFilesList,
-            "province_maps"
-          );
+          addFilesToList(allStationsMapFiles, allStationsMapFilesList, "all_stations_maps");
+          addFilesToList(provinceMapFiles, provinceMapFilesList, "province_maps");
+          addFilesToList(dailyAqiDataFiles, dailyAqiDataFilesList, "daily_aqi_data"); // Add daily AQI data files
+
         } catch (error) {
           console.error("Error populating file list:", error);
           hideLoading();
@@ -262,9 +262,7 @@
       }
 
       downloadBtn.addEventListener("click", () => {
-        const checkboxes = document.querySelectorAll(
-          'input[type="checkbox"]:checked'
-        );
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
         if (checkboxes.length === 0) {
           alert("Please select at least one file to download.");
           return;
