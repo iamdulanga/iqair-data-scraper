@@ -133,7 +133,8 @@
           <th>Province Maps</th>
           <th>All Station Maps</th>
           <th>All Stations & Most Polluted Cities XL Files</th>
-          <th>Daily AQI Data Files</th> <!-- New column for Daily AQI Data -->
+          <th>Daily AQI Data Files</th>
+          <!-- New column for Daily AQI Data -->
         </tr>
       </thead>
       <tbody>
@@ -155,7 +156,8 @@
           </td>
           <td>
             <div class="file-container">
-              <ul id="daily-aqi-data-files"></ul> <!-- New file container for daily AQI data -->
+              <ul id="daily-aqi-data-files"></ul>
+              <!-- New file container for daily AQI data -->
             </div>
           </td>
         </tr>
@@ -168,9 +170,14 @@
 
     <script>
       const xlsxFilesList = document.getElementById("xlsx-files");
-      const allStationsMapFilesList = document.getElementById("all-stations-map-files");
-      const provinceMapFilesList = document.getElementById("province-map-files");
-      const dailyAqiDataFilesList = document.getElementById("daily-aqi-data-files"); // New element for daily AQI data
+      const allStationsMapFilesList = document.getElementById(
+        "all-stations-map-files"
+      );
+      const provinceMapFilesList =
+        document.getElementById("province-map-files");
+      const dailyAqiDataFilesList = document.getElementById(
+        "daily-aqi-data-files"
+      ); // New element for daily AQI data
       const downloadBtn = document.getElementById("download-btn");
       const loadingOverlay = document.getElementById("loading-overlay");
 
@@ -182,7 +189,8 @@
         const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
         try {
           const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
           return await response.json();
         } catch (error) {
           console.error("Error fetching files:", error);
@@ -204,13 +212,17 @@
         try {
           showLoading();
 
-          const [xlsxFiles, allStationsMapFiles, provinceMapFiles, dailyAqiDataFiles] = 
-            await Promise.all([
-              fetchFiles("charts"),
-              fetchFiles("all_stations_maps"),
-              fetchFiles("province_maps"),
-              fetchFiles("daily_aqi_data"), // Fetch files from the daily_aqi_data folder
-            ]);
+          const [
+            xlsxFiles,
+            allStationsMapFiles,
+            provinceMapFiles,
+            dailyAqiDataFiles,
+          ] = await Promise.all([
+            fetchFiles("charts"),
+            fetchFiles("all_stations_maps"),
+            fetchFiles("province_maps"),
+            fetchFiles("daily_aqi_data"),
+          ]);
 
           hideLoading();
 
@@ -218,27 +230,64 @@
             !xlsxFiles.length &&
             !allStationsMapFiles.length &&
             !provinceMapFiles.length &&
-            !dailyAqiDataFiles.length // Check if daily AQI files exist
+            !dailyAqiDataFiles.length
           ) {
             alert("No files found in the repository.");
             return;
           }
 
+          function extractTimestamp(filename) {
+            const match = filename.match(
+              /\d{4}-\d{2}-\d{2}(?:[_-]\d{2}[_-]\d{2}[_-]\d{2})?/
+            );
+            if (!match) return new Date(0); // Return a minimum date if no timestamp is found
+
+            const dateParts = match[0].split(/[_-]/); // Split by both "_" and "-"
+
+            if (dateParts.length === 3) {
+              // Format: YYYY-MM-DD (Daily AQI)
+              return new Date(
+                `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T00:00:00Z`
+              );
+            } else {
+              // Format: YYYY-MM-DD_HH-MM-SS
+              return new Date(
+                `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${dateParts[3]}:${dateParts[4]}:${dateParts[5]}Z`
+              );
+            }
+          }
+
           function addFilesToList(files, listElement, folderName) {
+            // Sort files by extracted timestamp in descending order (latest first)
+            files.sort(
+              (a, b) => extractTimestamp(b.name) - extractTimestamp(a.name)
+            );
+
             files.forEach((file) => {
               const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/${folderName}/${file.name}`;
               const listItem = document.createElement("li");
               listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="${folderName}-${file.name}">
-                                    <label for="${folderName}-${file.name}">${file.name}</label>`;
+                                          <label for="${folderName}-${file.name}">${file.name}</label>`;
               listElement.appendChild(listItem);
             });
           }
 
           addFilesToList(xlsxFiles, xlsxFilesList, "charts");
-          addFilesToList(allStationsMapFiles, allStationsMapFilesList, "all_stations_maps");
-          addFilesToList(provinceMapFiles, provinceMapFilesList, "province_maps");
-          addFilesToList(dailyAqiDataFiles, dailyAqiDataFilesList, "daily_aqi_data"); // Add daily AQI data files
-
+          addFilesToList(
+            allStationsMapFiles,
+            allStationsMapFilesList,
+            "all_stations_maps"
+          );
+          addFilesToList(
+            provinceMapFiles,
+            provinceMapFilesList,
+            "province_maps"
+          );
+          addFilesToList(
+            dailyAqiDataFiles,
+            dailyAqiDataFilesList,
+            "daily_aqi_data"
+          );
         } catch (error) {
           console.error("Error populating file list:", error);
           hideLoading();
@@ -262,7 +311,9 @@
       }
 
       downloadBtn.addEventListener("click", () => {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const checkboxes = document.querySelectorAll(
+          'input[type="checkbox"]:checked'
+        );
         if (checkboxes.length === 0) {
           alert("Please select at least one file to download.");
           return;
