@@ -2,7 +2,7 @@ name: Generate AQI Files
 
 on:
   schedule:
-    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *'  # Every 5 minutes, including start of the hour
+    - cron: '*/15 * * * *'  # Every 5 minutes, including start of the hour
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -33,9 +33,9 @@ jobs:
           pip install -r requirements.txt
 
       # Generate daily AQI data file
-      - name: Generate AQI data files
-        run: |
-          python daily_aqi_data.py
+      #- name: Generate AQI data files
+      #  run: |
+      #    python daily_aqi_data.py
 
       # Generate all station and most polluted cities files
       - name: Generate chart files
@@ -43,9 +43,9 @@ jobs:
           python xlsx_file_generator.py
 
       # Generate map files
-      - name: Generate province map files
-        run: |
-          python province_map.py
+      #- name: Generate province map files
+      #  run: |
+      #    python province_map.py
 
       # Generate map file
       - name: Generate all stations map file
