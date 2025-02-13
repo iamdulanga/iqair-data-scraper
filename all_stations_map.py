@@ -157,7 +157,7 @@ def main():
               <div style="background: linear-gradient(135deg, {color} 0%, #cc1200 100%);
                           color: #fff;
                           padding: 8px;">
-                <div style="font-size: 9px; text-align: center;">
+                <div style="font-size: 12px; text-align: center;">
                   {datetime.now().strftime("On %B %d, %Y, %I:%M:%S %p GMT")}
                 </div>
                 <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
