@@ -11,19 +11,9 @@ from folium.plugins import FloatImage
 BASE_URL = "https://www.iqair.com"
 HEADERS = {"User-Agent": "MyBot/1.0 (https://example.com; contact@example.com)"}
 
-# Path to the local image
-image_path = os.path.join(os.getcwd(), 'assets', 'aqi_mini.png')
+# External URL for the color index image (update with your actual GitHub raw URL)
+COLOR_INDEX_URL = "https://raw.githubusercontent.com/DulangaDasanayake/iqair-data-scraper/main/assets/aqi_mini.png"
 
-def check_color_index():
-    """Check if the color index image exists locally."""
-    if os.path.exists(image_path):
-        print("✅ Color index image found locally. Using local file.")
-        return True
-    else:
-        print("❌ Color index image not found. Please add it to the 'assets' folder.")
-        return False
-
-# Getting into the all province AQI data
 def get_province_links():
     """Retrieve province links for Sri Lanka from IQAir."""
     main_url = f"{BASE_URL}/sri-lanka"
@@ -50,8 +40,6 @@ def get_province_links():
 
     return province_links
 
-
-# Get province links by their HTML tags
 def get_all_station_data(province_links):
     """Scrape station data (city and AQI) for each province."""
     all_station_data = []
@@ -80,7 +68,6 @@ def get_all_station_data(province_links):
 
     return all_station_data
 
-# Get weather station coordinates
 def get_coordinates(geolocator, city):
     """Get latitude and longitude for a given city."""
     try:
@@ -91,7 +78,6 @@ def get_coordinates(geolocator, city):
         pass
     return None, None
 
-# Assign colors for AQI index markers
 def get_aqi_color(aqi):
     """Return marker color based on AQI value."""
     if aqi <= 50:
@@ -107,23 +93,6 @@ def get_aqi_color(aqi):
     else:
         return "maroon"
 
-
-    '''def get_aqi_icon(aqi):
-        """Return an AQI icon based on the AQI value."""
-        if aqi <= 50:
-            return "😊"
-        elif aqi <= 100:
-            return "😐"
-        else:
-            return "😷" 
-        
-        --Have to go into the tooltip_html contens passed here for unable to comment this part there--
-        <div style="font-size: 12px; text-align: center;">
-                  {icon}
-                </div>
-            '''
-
-# Add messages for popus HTML content of AQI index markers
 def get_aqi_message(aqi):
     """Return a descriptive message for the given AQI value."""
     if aqi <= 50:
@@ -138,7 +107,6 @@ def get_aqi_message(aqi):
         return "Very Unhealthy: Health warnings of emergency conditions."
     else:
         return "Hazardous: Health alert—serious effects possible."
-
 
 def main():
     # Retrieve province links and station data
@@ -166,7 +134,6 @@ def main():
     for _, row in df_all_stations.iterrows():
         if pd.notna(row["Latitude"]) and pd.notna(row["Longitude"]):
             color = get_aqi_color(row["AQI"])
-            # icon = get_aqi_icon(row["AQI"])
 
             # tooltip HTML content
             tooltip_html = f"""
@@ -193,7 +160,6 @@ def main():
               </div>
             </div>
             """
-            # Folium marker - AQI index marker- Color markers on the map
             folium.Marker(
                 location=[row["Latitude"], row["Longitude"]],
                 icon=folium.DivIcon(
@@ -207,19 +173,16 @@ def main():
                                 line-height:30px;">
                       {row['AQI']}
                     </div>
-                """
+                    """
                 ),
                 tooltip=folium.Tooltip(tooltip_html),
             ).add_to(sri_lanka_map)
 
-    # Check for color index image and add it to the map
-    if check_color_index():
-        FloatImage(image_path, bottom=5, right=5).add_to(sri_lanka_map)
+    # Add the color index image using the external URL
+    FloatImage(COLOR_INDEX_URL, bottom=5, right=5).add_to(sri_lanka_map)
 
     # Format current time in Sri Lanka timezone (GMT+5:30)
-    sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
-        "%Y-%m-%d_%H-%M-%S"
-    )
+    sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
 
     # Ensure the output directory exists
     output_dir = "all_stations_maps"
@@ -230,7 +193,6 @@ def main():
     map_file = os.path.join(output_dir, f"SL_All_Stations_AQI_Map_{sl_time}.html")
     sri_lanka_map.save(map_file)
     print(f"✅ Interactive map saved as {map_file}")
-
 
 if __name__ == "__main__":
     main()
