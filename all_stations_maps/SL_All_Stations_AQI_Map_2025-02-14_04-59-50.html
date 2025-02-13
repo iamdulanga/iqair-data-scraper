@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_4c49832a41f53fd90a785b1787eba1b1 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    
+                <style>
+                    #float_image_5d6c450140ec53727e5cc9c74f728e87 {
+                        position: absolute;
+                        bottom: 5%;
+                        left: 75%;
+                          right: 5;
+                        }
+                </style>
+            
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_4c49832a41f53fd90a785b1787eba1b1" ></div>
+        
+    
+            <img id="float_image_5d6c450140ec53727e5cc9c74f728e87" alt="float_image"
+                 src="https://raw.githubusercontent.com/DulangaDasanayake/iqair-data-scraper/main/assets/aqi_mini.png"
+                 style="z-index: 999999">
+            </img>
+            
+</body>
+<script>
+    
+    
+            var map_4c49832a41f53fd90a785b1787eba1b1 = L.map(
+                "map_4c49832a41f53fd90a785b1787eba1b1",
+                {
+                    center: [7.8731, 80.7718],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 7,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_9e2c0450dc487e814d27ba8195b1cd94 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_9e2c0450dc487e814d27ba8195b1cd94.addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var marker_6c9261c80817c26b2e804d9d2bdad385 = L.marker(
+                [7.36032, 80.60062],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_e5fae0e0b4a420719450530f7dafe42c = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      68\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_6c9261c80817c26b2e804d9d2bdad385.setIcon(div_icon_e5fae0e0b4a420719450530f7dafe42c);
+        
+    
+            marker_6c9261c80817c26b2e804d9d2bdad385.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Akurana
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  68
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9e798ab2cd1c919a74c757b95b42ccdb = L.marker(
+                [7.8742031, 80.6510917],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_48e38670b462f1e601ec83748a1a6a58 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      67\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_9e798ab2cd1c919a74c757b95b42ccdb.setIcon(div_icon_48e38670b462f1e601ec83748a1a6a58);
+        
+    
+            marker_9e798ab2cd1c919a74c757b95b42ccdb.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Dambulla
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  67
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_c1976f982a77219c75ce4ac97004dbab = L.marker(
+                [7.0558938, 80.5350145],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_d6bd1d225ae03e98d252b5f8654500e7 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      61\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_c1976f982a77219c75ce4ac97004dbab.setIcon(div_icon_d6bd1d225ae03e98d252b5f8654500e7);
+        
+    
+            marker_c1976f982a77219c75ce4ac97004dbab.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Nawalapitiya
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  61
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_306e5eb28f27f8241b0098aea4ef15f1 = L.marker(
+                [7.2964937, 80.7334168],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_97badb6d023a852a48021993f28e4972 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      60\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_306e5eb28f27f8241b0098aea4ef15f1.setIcon(div_icon_97badb6d023a852a48021993f28e4972);
+        
+    
+            marker_306e5eb28f27f8241b0098aea4ef15f1.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Digana
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  60
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_fa0a4d3d2574a8c5a8b5dfcc01221fdf = L.marker(
+                [7.2931208, 80.6350358],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_dff2923981665beef3b28d381fc67dba = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      57\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_fa0a4d3d2574a8c5a8b5dfcc01221fdf.setIcon(div_icon_dff2923981665beef3b28d381fc67dba);
+        
+    
+            marker_fa0a4d3d2574a8c5a8b5dfcc01221fdf.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Kandy
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  57
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_07bfaa27c29314c130856fe03e0c3e38 = L.marker(
+                [7.012402, 80.75716115484704],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_e2ba8625d5a14a6c993fd6acfab4b1f1 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:green;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      0\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_07bfaa27c29314c130856fe03e0c3e38.setIcon(div_icon_e2ba8625d5a14a6c993fd6acfab4b1f1);
+        
+    
+            marker_07bfaa27c29314c130856fe03e0c3e38.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, green 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Nuwara Eliya
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  0
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Good: Air quality is satisfactory.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_cbc63fe2d128005e974aad56c57582c0 = L.marker(
+                [7.8381021, 81.55675329831632],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_bc1da34f43dc69e8ed53b1941d5d69f5 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      54\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_cbc63fe2d128005e974aad56c57582c0.setIcon(div_icon_bc1da34f43dc69e8ed53b1941d5d69f5);
+        
+    
+            marker_cbc63fe2d128005e974aad56c57582c0.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Batticaloa
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  54
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_3d2c9d650e634681e42d514eedcb6099 = L.marker(
+                [8.576425, 81.2344952],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_c7a663e2ae28b7d3288a59e39488a75f = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:green;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      49\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_3d2c9d650e634681e42d514eedcb6099.setIcon(div_icon_c7a663e2ae28b7d3288a59e39488a75f);
+        
+    
+            marker_3d2c9d650e634681e42d514eedcb6099.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, green 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Trincomalee
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  49
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Good: Air quality is satisfactory.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_0e7c292fcb4251272bfa4385650a8b6e = L.marker(
+                [7.9962335, 81.04917225222181],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_4049967fda1c3e2699957bd36d76edc3 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      91\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_0e7c292fcb4251272bfa4385650a8b6e.setIcon(div_icon_4049967fda1c3e2699957bd36d76edc3);
+        
+    
+            marker_0e7c292fcb4251272bfa4385650a8b6e.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Polonnaruwa
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  91
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_761142f20bca381d079613ad24504a75 = L.marker(
+                [8.334985, 80.4106096],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_fac3b2d311908e5094c6e3516db56f0e = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      71\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_761142f20bca381d079613ad24504a75.setIcon(div_icon_fac3b2d311908e5094c6e3516db56f0e);
+        
+    
+            marker_761142f20bca381d079613ad24504a75.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Anuradhapura
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  71
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_dcc047cc45f480d8cb2dd3e5376b5aa1 = L.marker(
+                [7.5765074, 79.7956755],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_3fba118cac940f32701cc5fcbc756de6 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      73\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_dcc047cc45f480d8cb2dd3e5376b5aa1.setIcon(div_icon_3fba118cac940f32701cc5fcbc756de6);
+        
+    
+            marker_dcc047cc45f480d8cb2dd3e5376b5aa1.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Chilaw
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  73
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a2443fc442f0e3f08d4c271925d2ba3d = L.marker(
+                [7.981840249999999, 79.82933709234904],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_e6e18c54f155ca5270bbe98fbf1a9f40 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      60\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_a2443fc442f0e3f08d4c271925d2ba3d.setIcon(div_icon_e6e18c54f155ca5270bbe98fbf1a9f40);
+        
+    
+            marker_a2443fc442f0e3f08d4c271925d2ba3d.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Puttalam
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  60
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d70abf54351dcdf6a53e9812a6a1e87b = L.marker(
+                [7.4870464, 80.364908],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_a1b7f1633527e8a09e8ac9f38ef2aa88 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      56\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_d70abf54351dcdf6a53e9812a6a1e87b.setIcon(div_icon_a1b7f1633527e8a09e8ac9f38ef2aa88);
+        
+    
+            marker_d70abf54351dcdf6a53e9812a6a1e87b.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Kurunegala
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  56
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f1a31fca2104b8a42968f67fc305bbf7 = L.marker(
+                [9.665093, 80.0093029],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_1e00b2fbdcd06dc4e325e88da5154693 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      82\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_f1a31fca2104b8a42968f67fc305bbf7.setIcon(div_icon_1e00b2fbdcd06dc4e325e88da5154693);
+        
+    
+            marker_f1a31fca2104b8a42968f67fc305bbf7.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Jaffna
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  82
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_1598c5f1fdc316ff8ffb7db39c36a025 = L.marker(
+                [9.22651295, 80.78850192189782],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_a502d5f5e316000676c418f03a00ea1c = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      77\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_1598c5f1fdc316ff8ffb7db39c36a025.setIcon(div_icon_a502d5f5e316000676c418f03a00ea1c);
+        
+    
+            marker_1598c5f1fdc316ff8ffb7db39c36a025.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Mulliyavalai
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  77
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2558d780b2e1949072f3e79a335461dc = L.marker(
+                [9.3840068, 80.4087224],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_37b1f0ed9f4517769c46709ed1f6086c = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      71\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_2558d780b2e1949072f3e79a335461dc.setIcon(div_icon_37b1f0ed9f4517769c46709ed1f6086c);
+        
+    
+            marker_2558d780b2e1949072f3e79a335461dc.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Kilinochchi
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  71
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_895a5dd3ff92a5a7426a3d3092c29edc = L.marker(
+                [8.9400797, 79.9936756],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_39a80537ed9ba1cbf92a6fceb4dfd184 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      64\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_895a5dd3ff92a5a7426a3d3092c29edc.setIcon(div_icon_39a80537ed9ba1cbf92a6fceb4dfd184);
+        
+    
+            marker_895a5dd3ff92a5a7426a3d3092c29edc.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Adampan
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  64
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_019718d89ee412ff1bee3539a78bc39e = L.marker(
+                [6.579568500000001, 80.5882229874756],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_dba03ddd2afd7061bb8c3bd6c9ec41df = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:orange;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      122\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_019718d89ee412ff1bee3539a78bc39e.setIcon(div_icon_dba03ddd2afd7061bb8c3bd6c9ec41df);
+        
+    
+            marker_019718d89ee412ff1bee3539a78bc39e.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, orange 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Ratnapura
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  122
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Unhealthy for sensitive groups: Some may experience effects.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a934e737154ff2349cd3ab90abf48766 = L.marker(
+                [6.5310929, 80.3964775],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_50df578a51cf81a3506662f3ebab6b4c = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      64\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_a934e737154ff2349cd3ab90abf48766.setIcon(div_icon_50df578a51cf81a3506662f3ebab6b4c);
+        
+    
+            marker_a934e737154ff2349cd3ab90abf48766.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Kalawana
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  64
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_8be01e5a355e99bfc407642ee52fd792 = L.marker(
+                [6.0328139, 80.214955],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_4f752b4fc9662e9c89ca543e90906fc5 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:orange;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      116\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_8be01e5a355e99bfc407642ee52fd792.setIcon(div_icon_4f752b4fc9662e9c89ca543e90906fc5);
+        
+    
+            marker_8be01e5a355e99bfc407642ee52fd792.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, orange 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Galle
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  116
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Unhealthy for sensitive groups: Some may experience effects.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_e61f154c58ddd99291e8befb7a83d0f1 = L.marker(
+                [6.8767478, 80.03018427051589],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_25cc81fb28f626fcab07eb82a4bfd64d = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      69\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_e61f154c58ddd99291e8befb7a83d0f1.setIcon(div_icon_25cc81fb28f626fcab07eb82a4bfd64d);
+        
+    
+            marker_e61f154c58ddd99291e8befb7a83d0f1.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Deniya
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  69
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9d1bcd181f95f6ac599e7873a8260746 = L.marker(
+                [6.2389059, 80.0541466],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_9bbc2cf254733c469bf7a1c3e774e857 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      66\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_9d1bcd181f95f6ac599e7873a8260746.setIcon(div_icon_9bbc2cf254733c469bf7a1c3e774e857);
+        
+    
+            marker_9d1bcd181f95f6ac599e7873a8260746.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Ambalangoda
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  66
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_022f8f9662a540fce0f70f81927cb88b = L.marker(
+                [6.1224627, 81.0238588],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_21ef84eaf3a2d0d8e0957185fe122ee6 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:green;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      48\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_022f8f9662a540fce0f70f81927cb88b.setIcon(div_icon_21ef84eaf3a2d0d8e0957185fe122ee6);
+        
+    
+            marker_022f8f9662a540fce0f70f81927cb88b.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, green 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Ambalantota
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  48
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Good: Air quality is satisfactory.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_dd5a5319d344be303e49f846edf8853b = L.marker(
+                [6.8725497, 81.3507069],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_4b9f946dfbca41c661d3ca009d8510e7 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      82\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_dd5a5319d344be303e49f846edf8853b.setIcon(div_icon_4b9f946dfbca41c661d3ca009d8510e7);
+        
+    
+            marker_dd5a5319d344be303e49f846edf8853b.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Monaragala
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  82
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_9b60b72b9745ee19eb07ced1d8da57f9 = L.marker(
+                [7.3401663, 80.993126],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_9b7aa920457d6fd60d887a45d2f57e2a = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:green;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      38\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_9b60b72b9745ee19eb07ced1d8da57f9.setIcon(div_icon_9b7aa920457d6fd60d887a45d2f57e2a);
+        
+    
+            marker_9b60b72b9745ee19eb07ced1d8da57f9.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, green 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Mahiyanganaya
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  38
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Good: Air quality is satisfactory.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_05a6736ea95aa2c9fbe0a5e34556ed0c = L.marker(
+                [6.8304821, 80.9888204],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_8ce68b7b32c9644ee060baad0720947d = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:green;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      33\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_05a6736ea95aa2c9fbe0a5e34556ed0c.setIcon(div_icon_8ce68b7b32c9644ee060baad0720947d);
+        
+    
+            marker_05a6736ea95aa2c9fbe0a5e34556ed0c.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, green 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Bandarawela
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  33
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Good: Air quality is satisfactory.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ba8991c43704d8e110411407b2ddbff2 = L.marker(
+                [6.9021809, 79.9195776],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_3adf15070a7dfec6d827fef0c14d7855 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:red;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      160\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_ba8991c43704d8e110411407b2ddbff2.setIcon(div_icon_3adf15070a7dfec6d827fef0c14d7855);
+        
+    
+            marker_ba8991c43704d8e110411407b2ddbff2.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, red 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Battaramulla
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  160
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Unhealthy: Everyone may begin to experience effects.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2135cb362965563a372a8c7d754b6f45 = L.marker(
+                [6.9388614, 79.8542005],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_c84f3fbd16b4c0bdeb87b2945791741e = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:orange;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      113\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_2135cb362965563a372a8c7d754b6f45.setIcon(div_icon_c84f3fbd16b4c0bdeb87b2945791741e);
+        
+    
+            marker_2135cb362965563a372a8c7d754b6f45.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, orange 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Colombo
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  113
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Unhealthy for sensitive groups: Some may experience effects.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_6dbd4c14d8aaf69d58225ea8a013027b = L.marker(
+                [7.1190247499999995, 79.91598756451819],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_842cfae8abd0fa44cdd0bf15e5336d66 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      71\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_6dbd4c14d8aaf69d58225ea8a013027b.setIcon(div_icon_842cfae8abd0fa44cdd0bf15e5336d66);
+        
+    
+            marker_6dbd4c14d8aaf69d58225ea8a013027b.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Gampaha
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  71
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_f933453156945e21a7454a91e0903120 = L.marker(
+                [6.8412384, 80.0034457],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_95c8bf07c272b2457be1420b735ba752 = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      68\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_f933453156945e21a7454a91e0903120.setIcon(div_icon_95c8bf07c272b2457be1420b735ba752);
+        
+    
+            marker_f933453156945e21a7454a91e0903120.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Homagama
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  68
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_296971a3186d6c5bba88668ee6abc17d = L.marker(
+                [6.8699688, 79.8882835],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_41d18aa19ece42d2041d99a8ccb3cdca = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      67\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_296971a3186d6c5bba88668ee6abc17d.setIcon(div_icon_41d18aa19ece42d2041d99a8ccb3cdca);
+        
+    
+            marker_296971a3186d6c5bba88668ee6abc17d.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Nugegoda
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  67
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_948f8e4670580d08b5addaee6afff146 = L.marker(
+                [7.2094282, 79.833117],
+                {
+}
+            ).addTo(map_4c49832a41f53fd90a785b1787eba1b1);
+        
+    
+            var div_icon_18833771d497bdf0f03d856505dd1f2f = L.divIcon({
+  "html": "\n                    \u003cdiv style=\"background-color:yellow;\n                                width:30px; height:30px;\n                                border-radius:50%;\n                                text-align:center;\n                                font-weight:bold;\n                                color:black;\n                                line-height:30px;\"\u003e\n                      66\n                    \u003c/div\u003e\n                    ",
+  "className": "empty",
+});
+            marker_948f8e4670580d08b5addaee6afff146.setIcon(div_icon_18833771d497bdf0f03d856505dd1f2f);
+        
+    
+            marker_948f8e4670580d08b5addaee6afff146.bindTooltip(
+                `<div>
+                     
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, yellow 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  On February 14, 2025, 04:59:50 AM GMT
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  Negombo
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  66
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                Moderate: Air quality is acceptable.
+              </div>
+            </div>
+            
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
