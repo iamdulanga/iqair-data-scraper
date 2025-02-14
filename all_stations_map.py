@@ -6,6 +6,7 @@ import folium
 from geopy.geocoders import Nominatim
 from datetime import datetime, timezone, timedelta
 from folium.plugins import FloatImage
+from folium import Html, Element
 
 # Constants
 BASE_URL = "https://www.iqair.com"
@@ -13,6 +14,7 @@ HEADERS = {"User-Agent": "MyBot/1.0 (https://example.com; contact@example.com)"}
 
 # External URL for the color index image (update with your actual GitHub raw URL)
 COLOR_INDEX_URL = "https://raw.githubusercontent.com/DulangaDasanayake/iqair-data-scraper/main/assets/aqi_template.png"
+
 
 def get_province_links():
     """Retrieve province links for Sri Lanka from IQAir."""
@@ -39,6 +41,7 @@ def get_province_links():
             province_links[province_name] = province_url
 
     return province_links
+
 
 def get_all_station_data(province_links):
     """Scrape station data (city and AQI) for each province."""
@@ -68,6 +71,7 @@ def get_all_station_data(province_links):
 
     return all_station_data
 
+
 def get_coordinates(geolocator, city):
     """Get latitude and longitude for a given city."""
     try:
@@ -77,6 +81,7 @@ def get_coordinates(geolocator, city):
     except Exception:
         pass
     return None, None
+
 
 def get_aqi_color(aqi):
     """Return marker color based on AQI value."""
@@ -93,6 +98,7 @@ def get_aqi_color(aqi):
     else:
         return "maroon"
 
+
 def get_aqi_message(aqi):
     """Return a descriptive message for the given AQI value."""
     if aqi <= 50:
@@ -107,6 +113,7 @@ def get_aqi_message(aqi):
         return "Very Unhealthy: Health warnings of emergency conditions."
     else:
         return "Hazardous: Health alert—serious effects possible."
+
 
 def main():
     # Retrieve province links and station data
@@ -168,7 +175,7 @@ def main():
                                 width:30px; height:30px;
                                 border-radius:50%;
                                 text-align:center;
-                                font-weight:bold;
+                                font-weight:800;
                                 color:black;
                                 line-height:30px;">
                       {row['AQI']}
@@ -178,11 +185,26 @@ def main():
                 tooltip=folium.Tooltip(tooltip_html),
             ).add_to(sri_lanka_map)
 
-    # Add the color index image using the external URL
-    FloatImage(COLOR_INDEX_URL, bottom=5, right=5).add_to(sri_lanka_map)
+    # HTML to center the image
+    float_image_html = f"""
+    <div style="
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;">
+        <img src="{COLOR_INDEX_URL}" width="950px" style="box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+    </div>
+    """
+
+    # Add to map
+    float_element = Element(float_image_html)
+    sri_lanka_map.get_root().html.add_child(float_element)
 
     # Format current time in Sri Lanka timezone (GMT+5:30)
-    sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
+    sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
+        "%Y-%m-%d_%H-%M-%S"
+    )
 
     # Ensure the output directory exists
     output_dir = "all_stations_maps"
@@ -193,6 +215,7 @@ def main():
     map_file = os.path.join(output_dir, f"SL_All_Stations_AQI_Map_{sl_time}.html")
     sri_lanka_map.save(map_file)
     print(f"✅ Interactive map saved as {map_file}")
+
 
 if __name__ == "__main__":
     main()
