@@ -186,7 +186,7 @@ def main():
             ).add_to(sri_lanka_map)
 
     # HTML to center the image
-    float_image_html = f"""
+    '''float_image_html = f"""
     <div style="
         position: fixed;
         bottom: 20px;
@@ -204,7 +204,7 @@ def main():
     # Format current time in Sri Lanka timezone (GMT+5:30)
     sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
         "%Y-%m-%d_%H-%M-%S"
-    )
+    )'''
 
     # Ensure the output directory exists
     output_dir = "all_stations_maps"
