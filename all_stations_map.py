@@ -5,7 +5,6 @@ import pandas as pd
 import folium
 from geopy.geocoders import Nominatim
 from datetime import datetime, timezone, timedelta
-from folium.plugins import FloatImage
 from folium import Html, Element
 
 # Constants
@@ -14,7 +13,6 @@ HEADERS = {"User-Agent": "MyBot/1.0 (https://example.com; contact@example.com)"}
 
 # External URL for the color index image (update with your actual GitHub raw URL)
 COLOR_INDEX_URL = "https://raw.githubusercontent.com/DulangaDasanayake/iqair-data-scraper/main/assets/aqi_template.png"
-
 
 def get_province_links():
     """Retrieve province links for Sri Lanka from IQAir."""
@@ -41,7 +39,6 @@ def get_province_links():
             province_links[province_name] = province_url
 
     return province_links
-
 
 def get_all_station_data(province_links):
     """Scrape station data (city and AQI) for each province."""
@@ -71,7 +68,6 @@ def get_all_station_data(province_links):
 
     return all_station_data
 
-
 def get_coordinates(geolocator, city):
     """Get latitude and longitude for a given city."""
     try:
@@ -81,7 +77,6 @@ def get_coordinates(geolocator, city):
     except Exception:
         pass
     return None, None
-
 
 def get_aqi_color(aqi):
     """Return marker color based on AQI value."""
@@ -98,25 +93,7 @@ def get_aqi_color(aqi):
     else:
         return "maroon"
 
-
-def get_aqi_message(aqi):
-    """Return a descriptive message for the given AQI value."""
-    if aqi <= 50:
-        return "Good: Air quality is satisfactory."
-    elif aqi <= 100:
-        return "Moderate: Air quality is acceptable."
-    elif aqi <= 150:
-        return "Unhealthy for sensitive groups: Some may experience effects."
-    elif aqi <= 200:
-        return "Unhealthy: Everyone may begin to experience effects."
-    elif aqi <= 300:
-        return "Very Unhealthy: Health warnings of emergency conditions."
-    else:
-        return "Hazardous: Health alert—serious effects possible."
-
-
 def main():
-    # Retrieve province links and station data
     province_links = get_province_links()
     if not province_links:
         return
@@ -127,46 +104,16 @@ def main():
         return
 
     df_all_stations = pd.DataFrame(all_station_data)
-
-    # Geocode cities to obtain latitude and longitude
     geolocator = Nominatim(user_agent="sri_lanka_aqi_map")
     df_all_stations["Latitude"], df_all_stations["Longitude"] = zip(
         *df_all_stations["City"].apply(lambda city: get_coordinates(geolocator, city))
     )
 
-    # Create the base map centered on Sri Lanka
     sri_lanka_map = folium.Map(location=[7.8731, 80.7718], zoom_start=7)
-
-    # Add markers with styled tooltips
+    
     for _, row in df_all_stations.iterrows():
         if pd.notna(row["Latitude"]) and pd.notna(row["Longitude"]):
             color = get_aqi_color(row["AQI"])
-
-            # tooltip HTML content
-            tooltip_html = f"""
-            <div style="font-family: 'Helvetica', Arial, sans-serif;
-                        border-radius: 8px;
-                        overflow: hidden;
-                        width: 240px;
-                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-              <div style="background: linear-gradient(135deg, {color} 0%, #cc1200 100%);
-                          color: #fff;
-                          padding: 8px;">
-                <div style="font-size: 12px; text-align: center;">
-                  {datetime.now().strftime("On %B %d, %Y, %I:%M:%S %p GMT")}
-                </div>
-                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
-                  {row['City']}
-                </div>
-                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
-                  {row['AQI']}
-                </div>
-              </div>
-              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
-                {get_aqi_message(row['AQI'])}
-              </div>
-            </div>
-            """
             folium.Marker(
                 location=[row["Latitude"], row["Longitude"]],
                 icon=folium.DivIcon(
@@ -182,11 +129,11 @@ def main():
                     </div>
                     """
                 ),
-                tooltip=folium.Tooltip(tooltip_html),
             ).add_to(sri_lanka_map)
 
-    # HTML to center the image
-    '''float_image_html = f"""
+    # Commented out floating image feature
+    '''
+    float_image_html = f"""
     <div style="
         position: fixed;
         bottom: 20px;
@@ -196,26 +143,18 @@ def main():
         <img src="{COLOR_INDEX_URL}" width="950px" style="box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
     </div>
     """
-
-    # Add to map
     float_element = Element(float_image_html)
     sri_lanka_map.get_root().html.add_child(float_element)
+    '''
 
-    # Format current time in Sri Lanka timezone (GMT+5:30)
-    sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime(
-        "%Y-%m-%d_%H-%M-%S"
-    )'''
-
-    # Ensure the output directory exists
     output_dir = "all_stations_maps"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-
-    # Save the map as an HTML file
+    
+    sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
     map_file = os.path.join(output_dir, f"SL_All_Stations_AQI_Map_{sl_time}.html")
     sri_lanka_map.save(map_file)
     print(f"✅ Interactive map saved as {map_file}")
-
 
 if __name__ == "__main__":
     main()
