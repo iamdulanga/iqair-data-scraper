@@ -46,66 +46,16 @@
         padding: 10px;
         text-align: left;
         vertical-align: top;
-        width: 25%; /* Equal width for each column (1/4) */
+        width: 25%;
       }
       th {
         background-color: #f4f4f4;
       }
 
-      /* Scrollable columns */
-      .file-column {
-        max-height: 300px;
-        overflow-y: auto;
-      }
-
-      .file-column ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .file-column li {
-        margin-bottom: 5px;
-      }
-
-      /* Loading spinner */
-      .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        visibility: hidden;
-      }
-
-      .loading-spinner {
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #3498db;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 2s linear infinite;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* Container for the scrollable file lists */
       .file-container {
-        max-height: 650px; /* Adjust height as needed */
+        max-height: 650px;
         overflow-y: auto;
-        display: block; /* Ensures scroll works properly */
+        display: block;
         border: 1px solid #ddd;
         padding: 10px;
       }
@@ -130,20 +80,13 @@
     <table id="file-table">
       <thead>
         <tr>
-          <th>Most Polluted Cities by Province - Maps [Stopped]</th>
           <th>All AQ Stations in Sri Lanka - Maps</th>
           <th>All Stations & Most Polluted Cities - XL Files</th>
           <th>Daily AQI Data Files - XL Files [In Development]</th>
-          <!-- New column for Daily AQI Data -->
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>
-            <div class="file-container">
-              <ul id="province-map-files"></ul>
-            </div>
-          </td>
           <td>
             <div class="file-container">
               <ul id="all-stations-map-files"></ul>
@@ -157,29 +100,21 @@
           <td>
             <div class="file-container">
               <ul id="daily-aqi-data-files"></ul>
-              <!-- New file container for daily AQI data -->
             </div>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div class="loading-overlay" id="loading-overlay">
-      <div class="loading-spinner"></div>
-    </div>
-
     <script>
-      const xlsxFilesList = document.getElementById("xlsx-files");
       const allStationsMapFilesList = document.getElementById(
         "all-stations-map-files"
       );
-      const provinceMapFilesList =
-        document.getElementById("province-map-files");
+      const xlsxFilesList = document.getElementById("xlsx-files");
       const dailyAqiDataFilesList = document.getElementById(
         "daily-aqi-data-files"
-      ); // New element for daily AQI data
+      );
       const downloadBtn = document.getElementById("download-btn");
-      const loadingOverlay = document.getElementById("loading-overlay");
 
       const repoOwner = "DulangaDasanayake";
       const repoName = "iqair-data-scraper";
@@ -195,82 +130,47 @@
         } catch (error) {
           console.error("Error fetching files:", error);
           alert("Error fetching files. Check console for details.");
-          hideLoading();
           return [];
         }
       }
 
-      function showLoading() {
-        loadingOverlay.style.visibility = "visible";
+      function extractTimestamp(filename) {
+        const match = filename.match(
+          /\d{4}-\d{2}-\d{2}(?:[_-]\d{2}[_-]\d{2}[_-]\d{2})?/
+        );
+        if (!match) return new Date(0);
+        const dateParts = match[0].split(/[_-]/);
+        if (dateParts.length === 3) {
+          return new Date(
+            `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T00:00:00Z`
+          );
+        } else {
+          return new Date(
+            `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${dateParts[3]}:${dateParts[4]}:${dateParts[5]}Z`
+          );
+        }
       }
 
-      function hideLoading() {
-        loadingOverlay.style.visibility = "hidden";
+      function addFilesToList(files, listElement, folderName) {
+        files.sort(
+          (a, b) => extractTimestamp(b.name) - extractTimestamp(a.name)
+        );
+        files.forEach((file) => {
+          const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/${folderName}/${file.name}`;
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="${folderName}-${file.name}"> <label for="${folderName}-${file.name}">${file.name}</label>`;
+          listElement.appendChild(listItem);
+        });
       }
 
       async function populateFileList() {
         try {
-          showLoading();
-
-          const [
-            xlsxFiles,
-            allStationsMapFiles,
-            provinceMapFiles,
-            dailyAqiDataFiles,
-          ] = await Promise.all([
-            fetchFiles("charts"),
-            fetchFiles("all_stations_maps"),
-            fetchFiles("province_maps"),
-            fetchFiles("daily_aqi_data"),
-          ]);
-
-          hideLoading();
-
-          if (
-            !xlsxFiles.length &&
-            !allStationsMapFiles.length &&
-            !provinceMapFiles.length &&
-            !dailyAqiDataFiles.length
-          ) {
-            alert("No files found in the repository.");
-            return;
-          }
-
-          function extractTimestamp(filename) {
-            const match = filename.match(
-              /\d{4}-\d{2}-\d{2}(?:[_-]\d{2}[_-]\d{2}[_-]\d{2})?/
-            );
-            if (!match) return new Date(0); // Return a minimum date if no timestamp is found
-
-            const dateParts = match[0].split(/[_-]/); // Split by both "_" and "-"
-
-            if (dateParts.length === 3) {
-              // Format: YYYY-MM-DD (Daily AQI)
-              return new Date(
-                `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T00:00:00Z`
-              );
-            } else {
-              // Format: YYYY-MM-DD_HH-MM-SS
-              return new Date(
-                `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${dateParts[3]}:${dateParts[4]}:${dateParts[5]}Z`
-              );
-            }
-          }
-
-          function addFilesToList(files, listElement, folderName) {
-            // Sort files by extracted timestamp in descending order (latest first)
-            files.sort(
-              (a, b) => extractTimestamp(b.name) - extractTimestamp(a.name)
-            );
-
-            files.forEach((file) => {
-              const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/${folderName}/${file.name}`;
-              const listItem = document.createElement("li");
-              listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="${folderName}-${file.name}">
-                                          <label for="${folderName}-${file.name}">${file.name}</label>`;
-              listElement.appendChild(listItem);
-            });
-          }
+          const [xlsxFiles, allStationsMapFiles, dailyAqiDataFiles] =
+            await Promise.all([
+              fetchFiles("charts"),
+              fetchFiles("all_stations_maps"),
+              fetchFiles("daily_aqi_data"),
+            ]);
 
           addFilesToList(xlsxFiles, xlsxFilesList, "charts");
           addFilesToList(
@@ -279,34 +179,12 @@
             "all_stations_maps"
           );
           addFilesToList(
-            provinceMapFiles,
-            provinceMapFilesList,
-            "province_maps"
-          );
-          addFilesToList(
             dailyAqiDataFiles,
             dailyAqiDataFilesList,
             "daily_aqi_data"
           );
         } catch (error) {
           console.error("Error populating file list:", error);
-          hideLoading();
-        }
-      }
-
-      async function forceDownload(fileUrl, fileName) {
-        try {
-          const response = await fetch(fileUrl);
-          const blob = await response.blob();
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(link.href);
-        } catch (error) {
-          console.error("Download failed:", error);
         }
       }
 
@@ -318,11 +196,15 @@
           alert("Please select at least one file to download.");
           return;
         }
-
         checkboxes.forEach((checkbox) => {
           const fileUrl = checkbox.value;
           const fileName = fileUrl.split("/").pop();
-          forceDownload(fileUrl, fileName);
+          const link = document.createElement("a");
+          link.href = fileUrl;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
         });
       });
 
