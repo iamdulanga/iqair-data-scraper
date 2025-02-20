@@ -57,6 +57,6 @@ jobs:
         run: |
           git config --global user.name "DulangaDasanayake"
           git config --global user.email "dulanganiroshan721@gmail.com"
-          git add charts/* all_stations_maps/*
+          git add charts/*
           git diff --cached --quiet || git commit -m "Add newly generated chart"
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
