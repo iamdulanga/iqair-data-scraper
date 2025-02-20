@@ -20,16 +20,16 @@ if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
 
     # Find province list container
-    province_list = soup.find('ul', class_='state-list')
+    province_list = soup.find('ul', class_='location-list')
 
     if province_list:
         province_links = {}
 
         # Extract province names and URLs
-        for item in province_list.find_all('li', class_='state-list__item'):
+        for item in province_list.find_all('li', class_='location-item'):
             link_tag = item.find('a')
             if link_tag:
-                province_name = link_tag.text.strip()
+                province_name = link_tag.find('span', class_='location-item__name').text.strip()
                 province_url = base_url + link_tag['href']
                 province_links[province_name] = province_url
 
@@ -52,13 +52,17 @@ if response.status_code == 200:
                     for station in station_list.find_all('li', class_='location-item'):
                         city = station.find(
                             'span', class_='location-item__name').text.strip()
-                        aqi = station.find(
+                        aqi_text = station.find(
                             'span', class_='location-item__value').text.strip()
 
-                        # Append to overall data
-                        all_cities.append(
-                            {"Province": province, "City": city, "AQI": int(aqi)})
-                        province_data.append((city, int(aqi)))
+                        # Handle empty AQI values gracefully
+                        aqi = int(aqi_text) if aqi_text.isdigit() else None
+
+                        # Append to overall data if AQI is valid
+                        if aqi is not None:
+                            all_cities.append(
+                                {"Province": province, "City": city, "AQI": aqi})
+                            province_data.append((city, aqi))
 
                     # Get the most polluted city in this province
                     if province_data:

@@ -24,21 +24,22 @@ def get_province_links():
         return None
 
     soup = BeautifulSoup(response.text, "html.parser")
-    province_list = soup.find("ul", class_="state-list")
+    province_list = soup.find("ul", class_="location-list")  # Updated class name
 
     if not province_list:
         print("No province list found on the page.")
         return None
 
     province_links = {}
-    for item in province_list.find_all("li", class_="state-list__item"):
+    for item in province_list.find_all("li", class_="location-item"):
         link_tag = item.find("a")
         if link_tag:
-            province_name = link_tag.text.strip()
+            province_name = link_tag.find("span", class_="location-item__name").text.strip()
             province_url = BASE_URL + link_tag["href"]
             province_links[province_name] = province_url
 
     return province_links
+
 
 def get_all_station_data(province_links):
     """Scrape station data (city and AQI) for each province."""
