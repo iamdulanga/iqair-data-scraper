@@ -130,12 +130,20 @@
     <table id="file-table">
       <thead>
         <tr>
+          <th>Most Polluted Cities by Province - Maps [Stopped]</th>
           <th>All AQ Stations in Sri Lanka - Maps</th>
           <th>All Stations & Most Polluted Cities - XL Files</th>
+          <th>Daily AQI Data Files - XL Files [In Development]</th>
+          <!-- New column for Daily AQI Data -->
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td>
+            <div class="file-container">
+              <ul id="province-map-files"></ul>
+            </div>
+          </td>
           <td>
             <div class="file-container">
               <ul id="all-stations-map-files"></ul>
@@ -144,6 +152,12 @@
           <td>
             <div class="file-container">
               <ul id="xlsx-files"></ul>
+            </div>
+          </td>
+          <td>
+            <div class="file-container">
+              <ul id="daily-aqi-data-files"></ul>
+              <!-- New file container for daily AQI data -->
             </div>
           </td>
         </tr>
@@ -163,7 +177,7 @@
         document.getElementById("province-map-files");
       const dailyAqiDataFilesList = document.getElementById(
         "daily-aqi-data-files"
-      );
+      ); // New element for daily AQI data
       const downloadBtn = document.getElementById("download-btn");
       const loadingOverlay = document.getElementById("loading-overlay");
 
@@ -226,15 +240,17 @@
             const match = filename.match(
               /\d{4}-\d{2}-\d{2}(?:[_-]\d{2}[_-]\d{2}[_-]\d{2})?/
             );
-            if (!match) return new Date(0);
+            if (!match) return new Date(0); // Return a minimum date if no timestamp is found
 
-            const dateParts = match[0].split(/[_-]/);
+            const dateParts = match[0].split(/[_-]/); // Split by both "_" and "-"
 
             if (dateParts.length === 3) {
+              // Format: YYYY-MM-DD (Daily AQI)
               return new Date(
                 `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T00:00:00Z`
               );
             } else {
+              // Format: YYYY-MM-DD_HH-MM-SS
               return new Date(
                 `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${dateParts[3]}:${dateParts[4]}:${dateParts[5]}Z`
               );
@@ -242,6 +258,7 @@
           }
 
           function addFilesToList(files, listElement, folderName) {
+            // Sort files by extracted timestamp in descending order (latest first)
             files.sort(
               (a, b) => extractTimestamp(b.name) - extractTimestamp(a.name)
             );
