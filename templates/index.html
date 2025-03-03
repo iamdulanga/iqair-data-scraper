@@ -1,214 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AQ Data File Downloader</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AQ Data File Downloader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      display: inline-block;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 10px 15px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      width: 25%;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+
+    .file-container {
+      max-height: 650px;
+      overflow-y: auto;
+      display: block;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    .file-container ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .file-container li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <h1>Download AQI Data & Map Files</h1>
+    <button class="btn" id="download-btn">Download Selected Files</button>
+  </div>
+
+  <table id="file-table">
+    <thead>
+      <tr>
+        <th>All AQ Stations in Sri Lanka - Maps</th>
+        <th>All Stations & Most Polluted Cities - XL Files</th>
+        <th>Daily AQI Data Files - XL Files [In Development]</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="file-container">
+            <ul id="all-stations-map-files"></ul>
+          </div>
+        </td>
+        <td>
+          <div class="file-container">
+            <ul id="xlsx-files"></ul>
+          </div>
+        </td>
+        <td>
+          <div class="file-container">
+            <ul id="daily-aqi-data-files"></ul>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    const allStationsMapFilesList = document.getElementById("all-stations-map-files");
+    const xlsxFilesList = document.getElementById("xlsx-files");
+    const dailyAqiDataFilesList = document.getElementById("daily-aqi-data-files");
+    const downloadBtn = document.getElementById("download-btn");
+
+    const repoOwner = "DulangaDasanayake";
+    const repoName = "iqair-data-scraper";
+    const branchName = "main";
+
+    async function fetchFiles(folderPath) {
+      const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return await response.json();
+      } catch (error) {
+        console.error("Error fetching files:", error);
+        alert("Error fetching files. Check console for details.");
+        return [];
       }
-      h1 {
-        color: #333;
-        display: inline-block;
+    }
+
+    function addFilesToList(files, listElement, folderName) {
+      files.forEach((file) => {
+        const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/${folderName}/${file.name}`;
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
+          <input type="checkbox" value="${fileUrl}" id="${folderName}-${file.name}"> 
+          <label for="${folderName}-${file.name}">${file.name}</label>
+        `;
+        listElement.appendChild(listItem);
+      });
+    }
+
+    async function populateFileList() {
+      try {
+        const [xlsxFiles, allStationsMapFiles, dailyAqiDataFiles] = await Promise.all([
+          fetchFiles("charts"),
+          fetchFiles("all_stations_maps"),
+          fetchFiles("daily_aqi_data"),
+        ]);
+
+        addFilesToList(xlsxFiles, xlsxFilesList, "charts");
+        addFilesToList(allStationsMapFiles, allStationsMapFilesList, "all_stations_maps");
+        addFilesToList(dailyAqiDataFiles, dailyAqiDataFilesList, "daily_aqi_data");
+      } catch (error) {
+        console.error("Error populating file list:", error);
+      }
+    }
+
+    downloadBtn.addEventListener("click", () => {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) {
+        alert("Please select at least one file to download.");
+        return;
       }
 
-      .top-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+      checkboxes.forEach(async (checkbox) => {
+        const fileUrl = checkbox.value;
+        const fileName = fileUrl.split("/").pop();
 
-      .btn {
-        padding: 10px 15px;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        cursor: pointer;
-      }
-      .btn:hover {
-        background-color: #45a049;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
-      }
-      th,
-      td {
-        padding: 10px;
-        text-align: left;
-        vertical-align: top;
-        width: 25%;
-      }
-      th {
-        background-color: #f4f4f4;
-      }
-
-      .file-container {
-        max-height: 650px;
-        overflow-y: auto;
-        display: block;
-        border: 1px solid #ddd;
-        padding: 10px;
-      }
-
-      .file-container ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      .file-container li {
-        margin-bottom: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="top-bar">
-      <h1>Download AQI Data & Map Files</h1>
-      <button class="btn" id="download-btn">Download Selected Files</button>
-    </div>
-
-    <table id="file-table">
-      <thead>
-        <tr>
-          <th>All AQ Stations in Sri Lanka - Maps</th>
-          <th>All Stations & Most Polluted Cities - XL Files</th>
-          <th>Daily AQI Data Files - XL Files [In Development]</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <div class="file-container">
-              <ul id="all-stations-map-files"></ul>
-            </div>
-          </td>
-          <td>
-            <div class="file-container">
-              <ul id="xlsx-files"></ul>
-            </div>
-          </td>
-          <td>
-            <div class="file-container">
-              <ul id="daily-aqi-data-files"></ul>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <script>
-      const allStationsMapFilesList = document.getElementById(
-        "all-stations-map-files"
-      );
-      const xlsxFilesList = document.getElementById("xlsx-files");
-      const dailyAqiDataFilesList = document.getElementById(
-        "daily-aqi-data-files"
-      );
-      const downloadBtn = document.getElementById("download-btn");
-
-      const repoOwner = "DulangaDasanayake";
-      const repoName = "iqair-data-scraper";
-      const branchName = "main";
-
-      async function fetchFiles(folderPath) {
-        const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${folderPath}?ref=${branchName}`;
         try {
-          const response = await fetch(url);
-          if (!response.ok)
-            throw new Error(`HTTP error! status: ${response.status}`);
-          return await response.json();
-        } catch (error) {
-          console.error("Error fetching files:", error);
-          alert("Error fetching files. Check console for details.");
-          return [];
-        }
-      }
-
-      function extractTimestamp(filename) {
-        const match = filename.match(
-          /\d{4}-\d{2}-\d{2}(?:[_-]\d{2}[_-]\d{2}[_-]\d{2})?/
-        );
-        if (!match) return new Date(0);
-        const dateParts = match[0].split(/[_-]/);
-        if (dateParts.length === 3) {
-          return new Date(
-            `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T00:00:00Z`
-          );
-        } else {
-          return new Date(
-            `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}T${dateParts[3]}:${dateParts[4]}:${dateParts[5]}Z`
-          );
-        }
-      }
-
-      function addFilesToList(files, listElement, folderName) {
-        files.sort(
-          (a, b) => extractTimestamp(b.name) - extractTimestamp(a.name)
-        );
-        files.forEach((file) => {
-          const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/${folderName}/${file.name}`;
-          const listItem = document.createElement("li");
-          listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="${folderName}-${file.name}"> <label for="${folderName}-${file.name}">${file.name}</label>`;
-          listElement.appendChild(listItem);
-        });
-      }
-
-      async function populateFileList() {
-        try {
-          const [xlsxFiles, allStationsMapFiles, dailyAqiDataFiles] =
-            await Promise.all([
-              fetchFiles("charts"),
-              fetchFiles("all_stations_maps"),
-              fetchFiles("daily_aqi_data"),
-            ]);
-
-          addFilesToList(xlsxFiles, xlsxFilesList, "charts");
-          addFilesToList(
-            allStationsMapFiles,
-            allStationsMapFilesList,
-            "all_stations_maps"
-          );
-          addFilesToList(
-            dailyAqiDataFiles,
-            dailyAqiDataFilesList,
-            "daily_aqi_data"
-          );
-        } catch (error) {
-          console.error("Error populating file list:", error);
-        }
-      }
-
-      downloadBtn.addEventListener("click", () => {
-        const checkboxes = document.querySelectorAll(
-          'input[type="checkbox"]:checked'
-        );
-        if (checkboxes.length === 0) {
-          alert("Please select at least one file to download.");
-          return;
-        }
-        checkboxes.forEach((checkbox) => {
-          const fileUrl = checkbox.value;
-          const fileName = fileUrl.split("/").pop();
+          const response = await fetch(fileUrl);
+          if (!response.ok) throw new Error("File not found");
+          const blob = await response.blob();
           const link = document.createElement("a");
-          link.href = fileUrl;
+          link.href = URL.createObjectURL(blob);
           link.download = fileName;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-        });
+        } catch (error) {
+          console.error("Error downloading file:", error);
+          alert("Failed to download: " + fileName);
+        }
       });
+    });
 
-      window.onload = populateFileList;
-    </script>
-  </body>
+    window.onload = populateFileList;
+  </script>
+</body>
 </html>
