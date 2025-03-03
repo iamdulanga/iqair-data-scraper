@@ -4,6 +4,14 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime, timezone, timedelta
 
+# Ensure the 'charts' folder exists
+def ensure_folder_exists(folder_name):
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+# Create 'charts' folder if it doesn't exist
+ensure_folder_exists("charts")
+
 # Base URL
 base_url = "https://www.iqair.com"
 
