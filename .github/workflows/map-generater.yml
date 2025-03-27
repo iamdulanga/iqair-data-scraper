@@ -2,7 +2,7 @@ name: Generate AQI Maps
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Every 5 minutes, including start of the hour
+    - cron: '*/15 * * * *'  # Every 15 minutes, including start of the hour
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
@@ -32,16 +32,19 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
 
-       # Generate map file
+      # Generate map file
       - name: Generate all stations map file
         run: |
           python all_stations_map.py
 
       # Commit generated files
       - name: Commit generated files
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name "iamdulanga"
           git config --global user.email "dulanganiroshan721@gmail.com"
           git add all_stations_maps/*
           git diff --cached --quiet || git commit -m "Add newly generated map"
+          git pull --rebase
           git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}

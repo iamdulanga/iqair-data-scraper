@@ -94,6 +94,21 @@ def get_aqi_color(aqi):
     else:
         return "maroon"
 
+def get_aqi_message(aqi):
+    """Return a descriptive message for the given AQI value."""
+    if aqi <= 50:
+        return "Good: Air quality is satisfactory."
+    elif aqi <= 100:
+        return "Moderate: Air quality is acceptable."
+    elif aqi <= 150:
+        return "Unhealthy for sensitive groups."
+    elif aqi <= 200:
+        return "Unhealthy for Everyone."
+    elif aqi <= 300:
+        return "Very Unhealthy."
+    else:
+        return "Hazardous."
+
 def main():
     province_links = get_province_links()
     if not province_links:
@@ -115,6 +130,33 @@ def main():
     for _, row in df_all_stations.iterrows():
         if pd.notna(row["Latitude"]) and pd.notna(row["Longitude"]):
             color = get_aqi_color(row["AQI"])
+
+            # tooltip HTML content
+            tooltip_html = f"""
+            <div style="font-family: 'Helvetica', Arial, sans-serif;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        width: 240px;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+              <div style="background: linear-gradient(135deg, {color} 0%, #cc1200 100%);
+                          color: #fff;
+                          padding: 8px;">
+                <div style="font-size: 12px; text-align: center;">
+                  {datetime.now().strftime("On %B %d, %Y, %I:%M:%S %p GMT")}
+                </div>
+                <div style="font-size: 14px; font-weight: bold; text-align: center; margin-top: 4px;">
+                  {row['City']}
+                </div>
+                <div style="font-size: 48px; font-weight: bold; text-align: center; line-height: 1;">
+                  {row['AQI']}
+                </div>
+              </div>
+              <div style="background-color: #fff; color: #333; padding: 8px; font-size: 12px; text-align: center;">
+                {get_aqi_message(row['AQI'])}
+              </div>
+            </div>
+            """
+
             folium.Marker(
                 location=[row["Latitude"], row["Longitude"]],
                 icon=folium.DivIcon(
@@ -130,6 +172,7 @@ def main():
                     </div>
                     """
                 ),
+                tooltip=folium.Tooltip(tooltip_html),
             ).add_to(sri_lanka_map)
 
     # Commented out floating image feature
