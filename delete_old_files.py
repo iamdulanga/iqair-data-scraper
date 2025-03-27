@@ -5,7 +5,7 @@ import datetime
 # Use GitHub Actions secret token
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
-REPO_OWNER = "DulangaDasanayake"
+REPO_OWNER = "iamdulanga"
 REPO_NAME = "iqair-data-scraper"
 BRANCH = "main"
 FOLDERS = ["all_stations_maps", "charts"]

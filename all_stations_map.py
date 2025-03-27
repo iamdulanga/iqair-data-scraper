@@ -12,7 +12,7 @@ BASE_URL = "https://www.iqair.com"
 HEADERS = {"User-Agent": "MyBot/1.0 (https://example.com; contact@example.com)"}
 
 # External URL for the color index image (update with your actual GitHub raw URL)
-COLOR_INDEX_URL = "https://raw.githubusercontent.com/DulangaDasanayake/iqair-data-scraper/main/assets/aqi_template.png"
+COLOR_INDEX_URL = "https://raw.githubusercontent.com/iamdulanga/iqair-data-scraper/main/assets/aqi_template.png"
 
 def get_province_links():
     """Retrieve province links for Sri Lanka from IQAir."""
