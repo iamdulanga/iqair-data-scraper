@@ -1,0 +1,35 @@
+name: Monthly AQI Merger
+
+on:
+  schedule:
+    - cron: '5 0 1 * *'  # At 00:05 on the 1st of every month (UTC)
+  workflow_dispatch:     # Optional: lets you run it manually from GitHub UI
+
+jobs:
+  merge_monthly_aqi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas openpyxl
+
+      - name: Run AQI monthly merge script
+        run: |
+          python monthly_data_file.py
+
+      - name: Upload monthly AQI Excel file as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-aqi-report
+          path: monthly_charts/*.xlsx
