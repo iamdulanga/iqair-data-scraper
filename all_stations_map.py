@@ -196,7 +196,7 @@ def main():
         os.makedirs(output_dir)
     
     sl_time = datetime.now(timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d_%H-%M-%S")
-    map_file = os.path.join(output_dir, f"SL_AQI_Map_{sl_time}.html")
+    map_file = os.path.join(output_dir, f"AQI_Map_{sl_time}.html")
     sri_lanka_map.save(map_file)
     print(f"✅ Interactive map saved as {map_file}")
 

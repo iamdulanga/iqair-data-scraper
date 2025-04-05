@@ -50,7 +50,7 @@ df_pivoted = pd.DataFrame.from_dict(aqi_dict, orient="index").sort_index()
 df_pivoted.index.name = "City"
 
 if not df_pivoted.empty:
-    out_name = f"SL_AQI_Weekly_{start_str}_to_{end_str}.xlsx"
+    out_name = f"AQI_Weekly_{start_str}_to_{end_str}.xlsx"
     out_path = os.path.join(WEEKLY_FOLDER, out_name)
     df_pivoted.to_excel(out_path)
     print(f"✅ Weekly AQI timeseries saved: {out_path}")
