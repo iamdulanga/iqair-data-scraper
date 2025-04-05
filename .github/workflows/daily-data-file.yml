@@ -1,4 +1,4 @@
-name: Generate AQI XL Files
+name: Daily Data Files
 
 on:
   schedule:
@@ -32,25 +32,10 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
 
-      # Generate daily AQI data file
-      #- name: Generate AQI data files
-      #  run: |
-      #    python daily_aqi_data.py
-
       # Generate all station and most polluted cities files
       - name: Generate chart files
         run: |
-          python xlsx_file_generator.py
-
-      # Generate map files
-      #- name: Generate province map files
-      #  run: |
-      #    python province_map.py
-
-       #Generate map file
-      #- name: Generate all stations map file
-      #  run: |
-      #    python all_stations_map.py
+          python daily_data_file.py
 
       # Commit generated files
       - name: Commit generated files
