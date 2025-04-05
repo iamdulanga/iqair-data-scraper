@@ -17,16 +17,16 @@ prev_month_str = prev_month.strftime("%Y-%m")
 # Store pivoted AQI data here
 aqi_dict = {}
 
-# Process each relevant daily file
 for file in os.listdir(DAILY_FOLDER):
-    if file.endswith(".xlsx") and prev_month_str in file:
+    if file.endswith(".xlsx") and file.startswith(f"SL_AQI_{prev_month_str}"):
         file_path = os.path.join(DAILY_FOLDER, file)
         try:
             df = pd.read_excel(file_path, sheet_name="All Cities")
-            # Get timestamp from filename
-            timestamp = file.replace(".xlsx", "").split("_")[-1]
-            timestamp_fmt = datetime.strptime(timestamp, "%Y-%m-%d_%H-%M")
-            col_label = timestamp_fmt.strftime("%Y-%m-%d %H:%M")
+            
+            # Extract full timestamp from filename
+            timestamp_str = file.replace(".xlsx", "").split("SL_AQI_")[-1]
+            timestamp_fmt = datetime.strptime(timestamp_str, "%Y-%m-%d_%H-%M-%S")
+            col_label = timestamp_fmt.strftime("%Y-%m-%d %H:%M")  # or %H:%M:%S if you want precision
 
             for _, row in df.iterrows():
                 station = row.get("City")
