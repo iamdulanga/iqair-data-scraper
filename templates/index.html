@@ -397,7 +397,7 @@
             await Promise.all([
               fetchFiles("charts"),
               fetchFiles("all_stations_maps"),
-              fetchFiles("weekly_reports"),
+              fetchFiles("weekly_charts"),
             ]);
 
           hideLoading();
@@ -438,8 +438,10 @@
             files.forEach((file) => {
               const fileUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoName}/${branchName}/${folderName}/${file.name}`;
               const listItem = document.createElement("li");
+              const fileDisplayName = file.name.replace(/\.[^/.]+$/, ""); // removes the file extension
               listItem.innerHTML = `<input type="checkbox" value="${fileUrl}" id="${folderName}-${file.name}">
-                                          <label for="${folderName}-${file.name}">${file.name}</label>`;
+                      <label for="${folderName}-${file.name}">${fileDisplayName}</label>`;
+
               listElement.appendChild(listItem);
             });
           }
