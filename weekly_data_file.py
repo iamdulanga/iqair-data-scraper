@@ -18,10 +18,10 @@ end_str = last_sunday.strftime("%Y-%m-%d")
 
 # Collect all timestamps in that week
 aqi_dict = {}
-files_to_delete = []
 
 for file in os.listdir(DAILY_FOLDER):
     if not file.endswith(".xlsx") or not file.startswith("SL_AQI_"):
+        print(f"⚠️ Skipped file: {file} (invalid format or naming)")
         continue
 
     try:
@@ -40,8 +40,10 @@ for file in os.listdir(DAILY_FOLDER):
                     aqi_dict[station] = {}
                 aqi_dict[station][col_label] = aqi
 
-            files_to_delete.append(file_path)
-
+    except ValueError as ve:
+        print(f"❌ Timestamp format error in {file}: {ve}")
+    except pd.errors.EmptyDataError as ede:
+        print(f"❌ No data in {file}: {ede}")
     except Exception as e:
         print(f"❌ Error processing {file}: {e}")
 
@@ -54,14 +56,6 @@ if not df_pivoted.empty:
     out_path = os.path.join(WEEKLY_FOLDER, out_name)
     df_pivoted.to_excel(out_path)
     print(f"✅ Weekly AQI timeseries saved: {out_path}")
-
-    # Delete all processed files
-    for file_path in files_to_delete:
-        try:
-            os.remove(file_path)
-            print(f"🗑️ Deleted file: {file_path}")
-        except Exception as e:
-            print(f"⚠️ Failed to delete {file_path}: {e}")
 
 else:
     print("⚠️ No AQI data found for last week.")
