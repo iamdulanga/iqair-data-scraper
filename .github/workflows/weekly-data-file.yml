@@ -2,8 +2,8 @@ name: Weekly AQI File
 
 on:
   schedule:
-    - cron: '0 6 * * 1'  # At 00:05 on the 1st of every month (UTC)
-  workflow_dispatch:     # Optional: lets you run it manually from GitHub UI
+    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
+  workflow_dispatch:     # Optional: allows manual trigger via GitHub UI
 
 jobs:
   merge_weekly_aqi:
@@ -23,11 +23,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas openpyxl
 
-      - name: Run AQI monthly merge script
+      - name: Run AQI weekly merge script
         run: |
           python weekly_data_file.py
 
-      - name: Upload monthly AQI Excel file as artifact
+      - name: Upload weekly AQI Excel file as artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
