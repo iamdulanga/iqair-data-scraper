@@ -6,7 +6,7 @@ on:
   workflow_dispatch:     # Optional: lets you run it manually from GitHub UI
 
 jobs:
-  merge_monthly_aqi:
+  merge_weekly_aqi:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,11 +25,11 @@ jobs:
 
       - name: Run AQI monthly merge script
         run: |
-          python monthly_data_file.py
+          python weekly_data_file.py
 
       - name: Upload monthly AQI Excel file as artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: monthly-aqi-report
-          path: monthly_charts/*.xlsx
+          name: weekly-aqi-report
+          path: weekly_charts/*.xlsx
