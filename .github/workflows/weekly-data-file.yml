@@ -3,7 +3,7 @@ name: Weekly AQI File
 on:
   schedule:
     - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
-  workflow_dispatch:     # Optional: allows manual trigger via GitHub UI
+  workflow_dispatch:     # Allows manual trigger
 
 jobs:
   merge_weekly_aqi:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -24,12 +26,19 @@ jobs:
           pip install pandas openpyxl
 
       - name: Run AQI weekly merge script
-        run: |
-          python weekly_data_file.py
+        run: python weekly_data_file.py
 
-      - name: Upload weekly AQI Excel file as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: weekly-aqi-report
-          path: weekly_charts/*.xlsx
+      - name: Commit and push weekly AQI Excel file
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git pull origin ${{ github.ref_name }}
+
+          if [ -n "$(git status --porcelain weekly_charts/)" ]; then
+            git add weekly_charts/*.xlsx
+            git commit -m "📊 Weekly AQI Report: committed by GitHub Actions on $(date +'%Y-%m-%d')"
+            git push
+          else
+            echo "⚠️ No new or modified files to commit."
+          fi
