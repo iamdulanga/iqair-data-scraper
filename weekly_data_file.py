@@ -2,36 +2,44 @@ import os
 import pandas as pd
 from datetime import datetime, timedelta
 from pathlib import Path
+import pytz
+
+# Set SLST timezone
+SLST = pytz.timezone("Asia/Colombo")
 
 # Folders
 DAILY_FOLDER = "charts"
 WEEKLY_FOLDER = "weekly_charts"
 os.makedirs(WEEKLY_FOLDER, exist_ok=True)
 
-# Get today's date (assumed to be Monday)
-today = datetime.today()
-last_monday = today - timedelta(days=today.weekday() + 7)
-last_sunday = last_monday + timedelta(days=6)
+# Get current time in SLST and calculate last week
+today_sl = datetime.now(SLST)
+last_monday_sl = today_sl - timedelta(days=today_sl.weekday() + 7)
+last_sunday_sl = last_monday_sl + timedelta(days=6)
+last_sunday_sl = last_sunday_sl.replace(hour=23, minute=59, second=59, microsecond=999999)
 
-start_str = last_monday.strftime("%Y-%m-%d")
-end_str = last_sunday.strftime("%Y-%m-%d")
+
+start_str = last_monday_sl.strftime("%Y-%m-%d")
+end_str = last_sunday_sl.strftime("%Y-%m-%d")
 
 # Collect all timestamps in that week
 aqi_dict = {}
 
 for file in os.listdir(DAILY_FOLDER):
-    if not file.endswith(".xlsx") or not file.startswith("SL_AQI_"):
+    if not file.endswith(".xlsx") or not file.startswith("AQI_Data_"):
         print(f"⚠️ Skipped file: {file} (invalid format or naming)")
         continue
 
     try:
-        timestamp_str = file.replace(".xlsx", "").split("SL_AQI_")[-1]
-        timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d_%H-%M-%S")
+        timestamp_str = file.replace(".xlsx", "").split("AQI_Data_")[-1]
+        # Parse as naive datetime (assumed local/UTC) and convert to SLST
+        naive_dt = datetime.strptime(timestamp_str, "%Y-%m-%d_%H-%M-%S")
+        slst_dt = SLST.localize(naive_dt)
 
-        if last_monday <= timestamp <= last_sunday + timedelta(days=1):
+        if last_monday_sl <= slst_dt <= last_sunday_sl:
             file_path = os.path.join(DAILY_FOLDER, file)
             df = pd.read_excel(file_path, sheet_name="All Cities")
-            col_label = timestamp.strftime("%Y-%m-%d %H:%M")
+            col_label = slst_dt.strftime("%Y-%m-%d %H:%M")
 
             for _, row in df.iterrows():
                 station = row.get("City")
@@ -56,6 +64,5 @@ if not df_pivoted.empty:
     out_path = os.path.join(WEEKLY_FOLDER, out_name)
     df_pivoted.to_excel(out_path)
     print(f"✅ Weekly AQI timeseries saved: {out_path}")
-
 else:
     print("⚠️ No AQI data found for last week.")
