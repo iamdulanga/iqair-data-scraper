@@ -50,10 +50,15 @@ if response.status_code == 200:
                     province_data = []  # Store all cities in this province
 
                     for station in station_list.find_all('li', class_='location-item'):
-                        city = station.find(
-                            'span', class_='location-item__name').text.strip()
-                        aqi_text = station.find(
-                            'span', class_='location-item__value').text.strip()
+                        city_span = station.find('span', class_='location-item__name')
+                        aqi_span = station.find('span', class_='location-item__value')
+                        
+                        city = city_span.text.strip() if city_span else 'Unknown'
+                        aqi_text = aqi_span.text.strip() if aqi_span else ''
+                        
+                        # Handle empty or non-numeric AQI values gracefully
+                        aqi = int(aqi_text) if aqi_text.isdigit() else None
+
 
                         # Handle empty AQI values gracefully
                         aqi = int(aqi_text) if aqi_text.isdigit() else None
