@@ -1,0 +1,53 @@
+name: AQI Data and Maps Workflow
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  workflow_dispatch:
+
+jobs:
+  generate-aqi-assets:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Colombo
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+
+      - name: Generate all stations map file
+        run: python all_stations_map.py
+
+      - name: Generate daily data file
+        run: python daily_data_file.py
+
+      - name: Commit and push generated files
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config --global user.name "iamdulanga"
+          git config --global user.email "dulanganiroshan721@gmail.com"
+          git add all_stations_maps/* charts/*
+          git diff --cached --quiet || git commit -m "Add updated AQI maps and charts"
+          git pull --rebase
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
