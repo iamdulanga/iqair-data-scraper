@@ -1,5 +1,7 @@
 # AQI File Generation & Download Web App
 
+This project has been archived and will not be updated again. to access the latest version visit www.github.com/fectlk/iqair-data-scraper and this is the very original repository of this project.
+
 This project is a web application that allows users to view and download air quality index (AQI) files (maps and charts) generated from a scheduled task. The files are stored in a GitHub repository and can be downloaded directly from the web interface.
 
 ## Features
