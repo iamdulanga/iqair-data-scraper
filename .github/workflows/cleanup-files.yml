@@ -1,0 +1,42 @@
+name: Cleanup Old Files
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Runs daily at 01:00 AM
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Colombo
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Delete oldest files if over 300
+        run: |
+          for folder in charts all_stations_maps; do
+            count=$(ls "$folder" | wc -l)
+            echo "File count in $folder is $count."
+
+            if [ "$count" -gt 300 ]; then
+              remove_count=$((count - 300))
+              echo "Deleting $remove_count oldest files from $folder..."
+              ls -tp "$folder" | grep -v '/$' | tail -n +$((300+1)) | xargs -I {} rm -- "$folder/{}"
+            fi
+          done
+
+      - name: Commit and push deletions
+        run: |
+          git config --global user.email "orgbot@users.noreply.github.com"
+          git config --global user.name "OrgBot"
+          git add -A
+          git commit -m "chore: delete oldest files from charts and all_stations_maps" || echo "No changes to commit"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
